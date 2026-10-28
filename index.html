@@ -28,6 +28,10 @@ input:focus,select:focus{outline:0;border-color:var(--ac)}
 input::placeholder{font-weight:400;color:var(--mu)}
 h2,h3,p{margin:0}
 
+/* top bar with quick lang switch */
+.topbar{display:flex;justify-content:space-between;align-items:center;max-width:560px;margin:auto;padding:10px 14px 0}
+.lang-btn{background:var(--card);color:var(--ac);border:1px solid var(--ln);padding:6px 12px;border-radius:10px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:6px;box-shadow:0 2px 6px rgba(0,0,0,.03)}
+
 /* nav */
 #nav{position:fixed;inset:auto 0 0 0;z-index:8;display:flex;justify-content:center;gap:6px;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--ln);backdrop-filter:blur(10px)}
 #nav button{flex:1;max-width:180px;display:flex;flex-direction:column;align-items:center;gap:0;background:none;color:var(--mu);font-size:12px;padding:4px}
@@ -107,6 +111,10 @@ details summary{cursor:pointer;font-weight:700}
 </style>
 </head>
 <body>
+<div class="topbar">
+  <span style="font-weight:800;font-size:15px;color:var(--ac)">🏋️ Workout & Cal</span>
+  <button class="lang-btn" onclick="toggleLang()">🌐 ${S?.lang=='en'?'العربية (AR)':'English (EN)'}</button>
+</div>
 <main id="v"></main>
 <div id="tb" hidden><span></span><button onclick="clearInterval(T);tb.hidden=true">إيقاف</button></div>
 <nav id="nav"></nav>
@@ -123,7 +131,16 @@ const I18N={
   goal:'الهدف اليومي', cals:'سعرة', left:'سعرة باقية', over:'سعرة فوق الهدف',
   protein:'بروتين', carbs:'كارب', fats:'دهون',
   calc:'🧮 حاسبة السعرات', search:'ابحث: دجاج، رز، بيض...',
-  custom:'إضافة يدوية (أكلة مش بالقائمة)', lang:'اللغة / Language'
+  custom:'إضافة يدوية (أكلة مش بالقائمة)', backup:'النسخة الاحتياطية', lastBackup:'آخر نسخة',
+  shareBackup:'📤 شارك النسخة (واتساب، ملاحظات...)', copyBackup:'📋 انسخ النسخة',
+  shareFile:'📎 شارك كملف', downloadFile:'⬇️ حمّل ملف', restoreFile:'📂 استرجع من ملف',
+  manualText:'النص (للنسخ أو الاسترجاع اليدوي)', restoreText:'استرجع من النص',
+  backupTip:'الأسهل: اضغط "شارك النسخة" وابعتها لنفسك على واتساب أو احفظها بالملاحظات. للاسترجاع افتح "النص" والصقها بالصندوق الثاني.',
+  settingsTitle:'إعدادات', autoTimer:'شغّل مؤقت الراحة تلقائياً لما أعلّم مجموعة',
+  iphoneWarn:'آيفون: افتح الموقع بسفاري ← مشاركة ← "إضافة إلى الشاشة الرئيسية". بدونها آيفون ممكن يمسح بيانات المواقع إذا ما فتحتها أسبوع.',
+  androidWarn:'أندرويد: كروم ← ⋮ ← "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية".',
+  privateWarn:'لا تفتح الموقع بوضع التصفح الخفي، ولا تمسح بيانات الموقع من إعدادات المتصفح.',
+  resetFood:'رجّع قائمة الأكل الأصلية', wipeData:'مسح كل البيانات'
  },
  en:{
   ex:'Workouts', cal:'Calories', chart:'Charts', set:'Settings',
@@ -135,7 +152,16 @@ const I18N={
   goal:'Daily Goal', cals:'kcal', left:'kcal left', over:'kcal over limit',
   protein:'Protein', carbs:'Carbs', fats:'Fats',
   calc:'🧮 Calorie Calculator', search:'Search: Chicken, Rice, Eggs...',
-  custom:'Manual Entry (Item not in list)', lang:'Language / اللغة'
+  custom:'Manual Entry (Item not in list)', backup:'Backup & Export', lastBackup:'Last backup',
+  shareBackup:'📤 Share Backup', copyBackup:'📋 Copy Backup',
+  shareFile:'📎 Share as File', downloadFile:'⬇️ Download File', restoreFile:'📂 Restore from File',
+  manualText:'Manual Text (For manual copy/restore)', restoreText:'Restore from Text',
+  backupTip:'Tip: Share or copy your backup regularly to prevent data loss.',
+  settingsTitle:'Settings', autoTimer:'Auto-start rest timer when checking a set',
+  iphoneWarn:'iPhone: Open in Safari → Share → "Add to Home Screen". Otherwise iOS might clear browser data if not opened for a week.',
+  androidWarn:'Android: Chrome → Menu → "Install app" or "Add to Home Screen".',
+  privateWarn:'Do not use Incognito mode and do not clear browser site data.',
+  resetFood:'Reset Original Food List', wipeData:'Wipe All Data'
  }
 };
 
@@ -151,8 +177,6 @@ const def=()=>({lang:'ar',goal:2500,week:1,meals:{},days:[
 
 let S;try{S=JSON.parse(localStorage.getItem(K))}catch(e){}
 S=S||def();S.lang=S.lang||'ar';
-document.documentElement.lang=S.lang;
-document.documentElement.dir=S.lang=='ar'?'rtl':'ltr';
 
 function t(k){return (I18N[S.lang]&&I18N[S.lang][k])||k}
 function mig(d){d.week=d.week||1;d.days.forEach(y=>y.e.forEach(x=>{if(!x.wk){x.wk={1:{w:x.w||[],q:x.q||(x.w||[]).map(()=>''),d:x.d||[]}};delete x.w;delete x.q;delete x.d}}));return d}
@@ -165,11 +189,13 @@ const today=()=>iso(new Date());
 
 let em=-1,tab='w',di=0,date=today(),T=null,pg=null;
 const go=tabName=>{tab=tabName;scrollTo(0,0);R()};
+function toggleLang(){S.lang=S.lang=='ar'?'en':'ar';save();R()}
 function ring(p,sz,sw,col,track){const r=(sz-sw)/2,c=2*Math.PI*r;return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" style="transform:rotate(-90deg)"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${track}" stroke-width="${sw}"/><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-Math.min(1,p))}"/></svg>`}
 
 function R(){
  document.documentElement.lang=S.lang;
  document.documentElement.dir=S.lang=='ar'?'rtl':'ltr';
+ $('.lang-btn').innerHTML=`🌐 ${S.lang=='en'?'العربية (AR)':'English (EN)'}`;
  $('#nav').innerHTML=[['w','🏋️',t('ex')],['m','🍽️',t('cal')],['c','📊',t('chart')],['s','⚙️',t('set')]].map(([k,i,l])=>`<button class="${tab==k?'on':''}" onclick="go('${k}')"><span>${i}</span>${l}</button>`).join('');
  $('#v').innerHTML=bn()+(tab=='w'?RW():tab=='m'?RM():tab=='c'?RC():RS());
  if(tab=='m'){fs('');cr()}
@@ -211,7 +237,7 @@ function ad(){const n=prompt(t('exName'));if(n){S.days[di].e.push(mk(n,3,2));sav
 function tm(m){
  clearInterval(T);let s=Math.round(m*60);const b=$('#tb'),sp=b.querySelector('span');b.hidden=false;
  const u=()=>{sp.textContent='⏱ '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};u();
- T=setInterval(()=>{s--;u();if(s<=0){clearInterval(T);sp.textContent='💪 Done!';if(navigator.vibrate)navigator.vibrate([300,100,300]);setTimeout(()=>b.hidden=true,4000)}},1000);
+ T=setInterval(()=>{s--;u();if(s<=0){clearInterval(T);sp.textContent='💪 Done!';if(navigator.vibrate)navigator.vibrate([300,100,300]);setTimeout(()=>b.hidden=true,4000)}});
 }
 
 /* ---------- CALORIES ---------- */
@@ -251,11 +277,36 @@ function es(i){
 
 const FOODS=[
 ['بيض (مسلوق/مقلي)',155,13,1.1,11,'بيضة',50],['خبز عربي',275,9,56,1.2,'رغيف',60],['توست',265,9,49,3.2,'شريحة',30],
-['رز مطبوخ',130,2.7,28,0.3,'صحن',200],['صدر دجاج مشوي',165,31,0,3.6,'صدر',170],['بطاطا مسلوقة',87,1.9,20,0.1,'حبة',150],
-['حليب كامل',61,3.2,4.8,3.3,'كوب',240],['تونة معلبة',116,26,0,1,'علبة',120],['شوفان',389,17,66,7,'نص كوب',40],
-['واي بروتين',400,80,8,6,'مغرفة',30],['موز',89,1.1,23,0.3,'حبة',120],['تمر',282,2.5,75,0.4,'حبة',10]
-];
-const allF=()=>FOODS;
+['رز مطبوخ',130,2.7,28,0.3,'صحن',200],['برغل مطبوخ',83,3,19,0.2,'صحن',200],['معكرونة مطبوخة',158,5.8,31,0.9,'صحن',200],
+['بطاطا مسلوقة',87,1.9,20,0.1,'حبة',150],['بطاطا مقلية',312,3.4,41,15,'حصة',150],['صدر دجاج مشوي',165,31,0,3.6,'صدر',170],
+['فخذ دجاج مشوي',209,26,0,11,'فخذ',120],['لحم بقر مشوي/مفروم',250,26,0,15,'قطعة',100],['لحم غنم مشوي',294,25,0,21,'قطعة',100],
+['تونة معلبة بالماي',116,26,0,1,'علبة',120],['سلمون مشوي',208,22,0,13,'قطعة',150],['حليب كامل',61,3.2,4.8,3.3,'كوب',240],
+['لبن زبادي',61,3.5,4.7,3.3,'علبة',200],['لبنة',180,6,4,16,'ملعقة كبيرة',20],['جبنة بيضاء',264,14,4,21,'قطعة',30],
+['جبنة شيدر',403,25,1.3,33,'شريحة',20],['حمص مطبوخ',164,8.9,27,2.6,'نص كوب',80],['حمص بطحينة',177,5,14,10,'صحن صغير',100],
+['فول مدمس',110,7.6,19,0.4,'صحن',200],['عدس مطبوخ',116,9,20,0.4,'صحن',200],['مجدرة',150,5,24,4,'صحن',250],
+['فلافل',333,13,32,18,'قرص',17],['زبدة فستق',588,25,20,50,'ملعقة كبيرة',16],['لوز',579,21,22,50,'حفنة',28],
+['جوز',654,15,14,65,'حفنة',28],['تمر',282,2.5,75,0.4,'حبة',10],['زيت زيتون',884,0,0,100,'ملعقة كبيرة',13.5],
+['زبدة',717,0.9,0.1,81,'ملعقة كبيرة',14],['عسل',304,0.3,82,0,'ملعقة صغيرة',7],['سكر',387,0,100,0,'ملعقة صغيرة',4],
+['شوفان',389,17,66,7,'نص كوب',40],['واي بروتين (بودرة)',400,80,8,6,'مغرفة',30],['موز',89,1.1,23,0.3,'حبة',120],
+['تفاح',52,0.3,14,0.2,'حبة',180],['برتقال',47,0.9,12,0.1,'حبة',130],['عنب',69,0.7,18,0.2,'حفنة',80],
+['بطيخ',30,0.6,7.6,0.2,'شريحة',250],['خيار',15,0.7,3.6,0.1,'حبة',100],['بندورة',18,0.9,3.9,0.2,'حبة',120],
+['عصير برتقال',45,0.7,10,0.2,'كوب',250],['كولا',42,0,10.6,0,'علبة',330],['شوكولاتة',546,5,60,31,'قطعة',10],
+['ساندويتش شاورما دجاج',200,12,20,8,'ساندويتش',250],['ساندويتش شاورما لحم',230,12,19,11,'ساندويتش',250],['شاورما عربي (لحم بخبز عربي)',240,13,18,13,'ساندويتش',280],
+['صحن شاورما دجاج (بدون خبز)',190,22,3,10,'صحن',250],['صحن شاورما لحم (بدون خبز)',250,20,2,18,'صحن',250],
+['شيش طاووق مشوي',170,26,2,6,'سيخ',100],['ساندويتش شيش طاووق',200,15,22,6,'ساندويتش',250],['كباب لحم مشوي',250,19,3,18,'سيخ',80],['كفتة مشوية',260,18,4,19,'سيخ',90],
+['ساندويتش فلافل',250,9,32,10,'ساندويتش',220],['فروج مشوي (بجلد)',215,24,0,13,'نص فروج',250],['ثومية (توم)',500,1,2,55,'ملعقة كبيرة',15],
+['متبل باذنجان',120,2.5,6,10,'صحن صغير',100],['تبولة',70,1.5,8,4,'صحن',150],['فتوش',90,2,10,5,'صحن',200],['سلطة خضار',25,1,4,0.5,'صحن',150],
+['منقوشة زعتر',300,8,40,12,'منقوشة',120],['منقوشة جبنة',320,12,35,15,'منقوشة',120],['جبنة حلوم',321,21,2,25,'قطعة',30],
+['كبة مقلية',270,12,20,15,'حبة',70],['ورق عنب',150,3,22,6,'حبة',15],['محشي كوسا',150,6,18,6,'حبة',80],
+['مقلوبة دجاج',170,9,20,6,'صحن',350],['منسف لحم',230,12,22,10,'صحن',400],['مسخن',260,13,27,11,'قطعة',300],['فتة حمص',200,8,22,9,'صحن',300],
+['شكشوكة',110,6,6,7,'صحن',250],['عجة بيض',190,10,5,14,'قطعة',80],['بيتزا',266,11,33,10,'شريحة',107],['برغر لحم (ساندويتش)',250,13,24,11,'ساندويتش',220],
+['شيبس',536,7,53,34,'كيس',40],['كنافة',360,6,45,18,'قطعة',120],['بقلاوة',430,6,50,24,'قطعة',40]];
+
+const allF=()=>{
+ const fx=S.fx||{},A=[];
+ FOODS.forEach(f=>{const v=fx[f[0]];if(v===null)return;const a=(v||f).slice();a.src='b';a.o=f[0];A.push(a)});
+ (S.foods||[]).forEach((f,i)=>{const a=f.slice();a.src='c';a.o=i;A.push(a)});
+ return A};
 const r1=v=>Math.round(v*10)/10;
 let fsel=null;
 function fs(q){
@@ -264,7 +315,7 @@ function fs(q){
 }
 function fp(i){
  const f=fsel=allF()[i];
- $('#fpn').innerHTML=`<div class="fsel"><b>${esc(f[0])}</b><div class="two" style="margin:8px 0"><input id="fq" type="number" step="any" value="${f[5]?1:100}" oninput="pv()"><select id="fu" onchange="$('#fq').value=this.value=='u'?1:100;pv()">${f[5]?`<option value="u">${esc(f[5])} (~${f[6]}g)</option>`:''}<option value="g">Grams (غرام)</option></select></div><div id="pvw" class="nt"></div><button class="add" onclick="fa()" style="margin-top:10px">+ Add to meals</button></div>`;
+ $('#fpn').innerHTML=`<div class="fsel"><b>${esc(f[0])}</b><div class="two" style="margin:8px 0"><input id="fq" type="number" step="any" value="${f[5]?1:100}" oninput="pv()"><select id="fu" onchange="$('#fq').value=this.value=='u'?1:100;pv()">${f[5]?`<option value="u">${esc(f[5])} (~${f[6]}g)</option>`:''}<option value="g">Grams</option></select></div><div id="pvw" class="nt"></div><button class="add" onclick="fa()" style="margin-top:10px">+ Add to meals</button></div>`;
  pv();
 }
 function fg(){const q=+$('#fq').value||0;return $('#fu').value=='u'?q*fsel[6]:q}
@@ -305,25 +356,32 @@ function cr(){
 }
 function sg(t,p,c,f){S.goal=t;S.mt={p,c,f};save();R()}
 
-/* ---------- SETTINGS ---------- */
+/* ---------- SETTINGS & BACKUPS ---------- */
 function bj(){return JSON.stringify(S)}
 function sbk(){S.bk=Date.now();save()}
-function cp(){sbk();navigator.clipboard.writeText(bj());alert('Copied!')}
-function ex(){sbk();const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([bj()],{type:'application/json'}));a.download=`workout-backup.json`;a.click()}
-function wipe(){if(confirm('Are you sure you want to reset all data?')){localStorage.removeItem(K);location.reload()}}
-function setLang(l){S.lang=l;save();R()}
+function shT(){sbk();if(navigator.share)navigator.share({title:'Backup',text:bj()});else cp()}
+function cp(){sbk();navigator.clipboard.writeText(bj());if($('#bs'))$('#bs').textContent='Copied to clipboard!'}
+function shF(){sbk();const b=new Blob([bj()],{type:'application/json'});if(navigator.share&&navigator.canShare&&navigator.canShare({files:[new File([b],'backup.json')]}))navigator.share({files:[new File([b],'backup.json')]});else ex()}
+function ex(){sbk();const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([bj()],{type:'application/json'}));a.download=`workout-backup-${today()}.json`;a.click()}
+function im(f){if(!f)return;const r=new FileReader();r.onload=e=>ld(e.target.result);r.readAsText(f)}
+function ld(str){try{const d=JSON.parse(str);if(d&&d.days){S=mig(d);save();R();alert('Restored successfully!')}}catch(e){alert('Invalid backup file/text')}}
+function wipe(){if(confirm(S.lang=='ar'?'هل أنت متأكد من مسح كل البيانات؟':'Are you sure you want to reset all data?')){localStorage.removeItem(K);location.reload()}}
+function rf(){if(confirm(S.lang=='ar'?'هل تريد استعادة قائمة الأكل الأصلية؟':'Reset original food list?')){S.fx={};save();R()}}
 
-function bn(){return ''}
 function RS(){
- return `<div class="card"><h3>${t('lang')}</h3>
- <div class="two" style="margin-top:10px">
-   <button class="${S.lang=='ar'?'add':''}" onclick="setLang('ar')">العربية</button>
-   <button class="${S.lang=='en'?'add':''}" onclick="setLang('en')">English</button>
- </div></div>
- <div class="card"><h3>Backup & Export</h3>
- <div class="two" style="margin-top:8px"><button onclick="cp()">📋 Copy Data</button><button onclick="ex()">⬇️ Download File</button></div>
- </div>
- <div class="card"><button onclick="wipe()" style="width:100%;color:#d33">Reset All Data</button></div>`;
+ const b=S.bk?new Date(S.bk).toLocaleDateString(S.lang=='ar'?'ar':'en-US',{weekday:'long',day:'numeric',month:'long'}): (S.lang=='ar'?'ما أخدت ولا وحدة':'None');
+ return `<div class="card"><h3>${t('backup')}</h3><p class="nt">${t('lastBackup')}: ${b}</p>
+ <button class="add" onclick="shT()" style="margin-top:10px">${t('shareBackup')}</button>
+ <div class="two" style="margin-top:8px"><button onclick="cp()">${t('copyBackup')}</button><button onclick="shF()">${t('shareFile')}</button></div>
+ <div class="two" style="margin-top:8px"><button onclick="ex()">${t('downloadFile')}</button><button onclick="$('#imf').click()">${t('restoreFile')}</button></div>
+ <input id="imf" type="file" hidden onchange="im(this.files[0])">
+ <p id="bs" class="nt" style="color:var(--tx)"></p>
+ <details id="bkd"><summary class="nt">${t('manualText')}</summary><textarea id="bkt" readonly rows="4" style="width:100%;margin-top:8px;border-radius:12px;border:0;background:var(--bg);color:var(--tx);padding:8px;font:12px monospace;direction:ltr">${esc(bj())}</textarea><textarea id="rtx" rows="3" placeholder="Paste backup here..." style="width:100%;margin-top:8px;border-radius:12px;border:0;background:var(--bg);color:var(--tx);padding:8px;font:12px monospace;direction:ltr"></textarea><button onclick="ld($('#rtx').value)" style="width:100%;margin-top:8px">${t('restoreText')}</button></details>
+ <p class="nt">${t('backupTip')}</p></div>
+ <div class="card"><h3>${t('settingsTitle')}</h3><label class="nt" style="display:flex;gap:10px;align-items:center"><input type="checkbox" style="width:24px;height:24px" ${S.at!==false?'checked':''} onchange="S.at=this.checked;save()"> ${t('autoTimer')}</label></div>
+ <div class="card"><h3>Data Safety</h3><p class="nt">${t('iphoneWarn')}<br><br>${t('androidWarn')}<br><br>${t('privateWarn')}</p></div>
+ <div class="card"><button onclick="rf()" style="width:100%">${t('resetFood')}</button></div>
+ <div class="card"><button onclick="wipe()" style="width:100%;color:#d33">${t('wipeData')}</button></div>`;
 }
 
 /* ---------- CHART ---------- */
