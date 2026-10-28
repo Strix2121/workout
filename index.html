@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="تمارين">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%234a3bf0'/%3E%3Ctext x='50' y='68' font-size='56' text-anchor='middle'%3E%F0%9F%8F%8B%3C/text%3E%3C/svg%3E">
-<title>برنامجي التدريبي</title>
+<title>برنامجي التدريبي | My Workout</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -27,7 +27,7 @@ input:focus{outline:0;border-color:var(--ac)}
 input::placeholder{font-weight:400;color:var(--mu)}
 h2,h3,p{margin:0}
 
-/* top bar محسن وأنيق */
+/* top bar */
 .topbar{display:flex;justify-content:space-between;align-items:center;max-width:560px;margin:auto;padding:12px 14px 4px}
 .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;color:var(--ac)}
 .lang-btn{
@@ -43,9 +43,7 @@ h2,h3,p{margin:0}
   gap:6px;
   box-shadow:0 2px 8px rgba(0,0,0,.04);
   cursor:pointer;
-  transition:all .2s ease;
 }
-.lang-btn:hover{background:var(--tint);border-color:var(--ac);transform:translateY(-1px)}
 
 /* nav */
 #nav{position:fixed;inset:auto 0 0 0;z-index:8;display:flex;justify-content:center;gap:6px;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--ln)}
@@ -144,17 +142,7 @@ const I18N={
   goal:'الهدف اليومي', cals:'سعرة', left:'سعرة باقية', over:'سعرة فوق الهدف',
   protein:'بروتين', carbs:'كارب', fats:'دهون',
   calc:'🧮 حاسبة السعرات (كم لازم تاكل باليوم؟)', search:'ابحث: دجاج، رز، بيض...',
-  custom:'إضافة يدوية (أكلة مش بالقائمة)', backup:'النسخة الاحتياطية', lastBackup:'آخر نسخة',
-  shareBackup:'📤 شارك النسخة (واتساب، ملاحظات...)', copyBackup:'📋 انسخ النسخة',
-  shareFile:'📎 شارك كملف', downloadFile:'⬇️ حمّل ملف', restoreFile:'📂 استرجع من ملف',
-  manualText:'النص (للنسخ أو الاسترجاع اليدوي)', restoreText:'استرجع من النص',
-  backupTip:'الأسهل: اضغط "شارك النسخة" وابعتها لنفسك على واتساب أو احفظها بالملاحظات. للاسترجاع افتح "النص" والصقها بالصندوق الثاني.',
-  settingsTitle:'إعدادات', autoTimer:'شغّل مؤقت الراحة تلقائياً لما أعلّم مجموعة',
-  iphoneWarn:'آيفون: افتح الموقع بسفاري ← مشاركة ← "إضافة إلى الشاشة الرئيسية". بدونها آيفون ممكن يمسح بيانات المواقع إذا ما فتحتها أسبوع.',
-  androidWarn:'أندرويد: كروم ← ⋮ ← "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية".',
-  privateWarn:'لا تفتح الموقع بوضع التصفح الخفي، ولا تمسح بيانات الموقع من إعدادات المتصفح.',
-  resetFood:'رجّع قائمة الأكل الأصلية', wipeData:'مسح كل البيانات',
-  tipsText:'الشدة: قبل الفشل العضلي بـ 1-2 عدّة. الزفير عند بذل العزم والشهيق عند الإرخاء. سخّن بإطالات حركية قبل التمرين وإطالات ثابتة بعده.'
+  custom:'إضافة يدوية (أكلة مش بالقائمة)'
  },
  en:{
   ex:'Workouts', cal:'Calories', chart:'Charts', set:'Settings',
@@ -166,19 +154,48 @@ const I18N={
   goal:'Daily Goal', cals:'kcal', left:'kcal left', over:'kcal over limit',
   protein:'Protein', carbs:'Carbs', fats:'Fats',
   calc:'🧮 Calorie Calculator', search:'Search: Chicken, Rice, Eggs...',
-  custom:'Manual Entry (Item not in list)', backup:'Backup & Export', lastBackup:'Last backup',
-  shareBackup:'📤 Share Backup', copyBackup:'📋 Copy Backup',
-  shareFile:'📎 Share as File', downloadFile:'⬇️ Download File', restoreFile:'📂 Restore from File',
-  manualText:'Manual Text (For manual copy/restore)', restoreText:'Restore from Text',
-  backupTip:'Tip: Share or copy your backup regularly to prevent data loss.',
-  settingsTitle:'Settings', autoTimer:'Auto-start rest timer when checking a set',
-  iphoneWarn:'iPhone: Open in Safari → Share → "Add to Home Screen". Otherwise iOS might clear browser data if not opened for a week.',
-  androidWarn:'Android: Chrome → Menu → "Install app" or "Add to Home Screen".',
-  privateWarn:'Do not use Incognito mode and do not clear browser site data.',
-  resetFood:'Reset Original Food List', wipeData:'Wipe All Data',
-  tipsText:'Intensity: 1-2 reps shy of failure. Exhale on exertion, inhale on release. Warm up before exercising.'
+  custom:'Manual Entry (Item not in list)'
  }
 };
+
+// أسماء التمارين باللغتين العربية والإنجليزية بمسماها الحقيقي في الجيم
+const EX_NAMES={
+ 'ضغط دمبل مائل للأعلى (صدر)':{ar:'ضغط دمبل مائل للأعلى (صدر)',en:'Incline Dumbbell Press'},
+ 'فراشة صدر':{ar:'فراشة صدر',en:'Pec Deck Fly'},
+ 'ضغط دمبل جانبي (أكتاف)':{ar:'ضغط دمبل جانبي (أكتاف)',en:'Dumbbell Shoulder Press'},
+ 'رفرفة جانبية (كتف جانبي)':{ar:'رفرفة جانبية (كتف جانبي)',en:'Dumbbell Lateral Raise'},
+ 'دفع سيخ خلف الرأس (ترايسبس)':{ar:'دفع سيخ خلف الرأس (ترايسبس)',en:'Overhead Triceps Extension'},
+ 'دفع سيخ للأسفل (ترايسبس)':{ar:'دفع سيخ للأسفل (ترايسبس)',en:'Triceps Pushdown'},
+ 'طحن معدة بالحبل':{ar:'طحن معدة بالحبل',en:'Cable Crunch'},
+
+ 'سحب أمامي ضيق':{ar:'سحب أمامي ضيق',en:'Close-Grip Lat Pulldown'},
+ 'تجديف ظهر ضيق':{ar:'تجديف ظهر ضيق',en:'Seated Cable Row'},
+ 'تجديف ظهر عريض':{ar:'تجديف ظهر عريض',en:'Wide-Grip Barbell Row'},
+ 'كيبل يد واحدة (كتف خلفي)':{ar:'كيبل يد واحدة (كتف خلفي)',en:'Cable Rear Delt Fly'},
+ 'دمبل متسع مائل (بايسبس)':{ar:'دمبل متسع مائل (بايسبس)',en:'Incline Dumbbell Curl'},
+ 'مطرقة':{ar:'مطرقة',en:'Hammer Curl'},
+ 'كرسي روماني':{ar:'كرسي روماني',en:'Roman Chair Back Extension'},
+
+ 'هاك سكوات':{ar:'هاك سكوات',en:'Hack Squat'},
+ 'RDL هامسترينغ':{ar:'RDL هامسترينغ',en:'Romanian Deadlift (RDL)'},
+ 'رد أمامي':{ar:'رد أمامي',en:'Leg Extension'},
+ 'رد خلفي':{ar:'رد خلفي',en:'Seated Leg Curl'},
+ 'مقرّبات':{ar:'مقرّبات',en:'Hip Adductor'},
+ 'بطات واقفة':{ar:'بطات واقفة',en:'Standing Calf Raise'},
+ 'فواصل يد واحدة':{ar:'فواصل يد واحدة',en:'Single-Leg Extension'},
+
+ 'فتح كيبل صدر علوي':{ar:'فتح كيبل صدر علوي',en:'High-to-Low Cable Fly'},
+ 'سحب بولي داون':{ar:'سحب بولي داون',en:'Lat Pulldown'},
+ 'رفرفة جانبية بالكيبل':{ar:'رفرفة جانبية بالكيبل',en:'Cable Lateral Raise'},
+ 'سحب يد واحدة (كتف خلفي)':{ar:'سحب يد واحدة (كتف خلفي)',en:'Single-Arm Rear Delt Fly'},
+ 'تبادل دمبل (بايسبس)':{ar:'تبادل دمبل (بايسبس)',en:'Dumbbell Bicep Curl'},
+ 'دوران جذع بالكيبل':{ar:'دوران جذع بالكيبل',en:'Cable Woodchopper'}
+};
+
+function getExName(n){
+  if(EX_NAMES[n]) return EX_NAMES[n][S.lang] || n;
+  return n;
+}
 
 const mk=(n,s,r)=>({n,s,r,wk:{1:{w:Array(s).fill(''),q:Array(s).fill(''),d:Array(s).fill(false)}}});
 const def=()=>({lang:'ar',goal:2500,week:1,meals:{},days:[
@@ -203,7 +220,7 @@ const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice
 const today=()=>iso(new Date());
 
 let em=-1,tab='w',di=0,date=today(),T=null,pg=null;
-const go=t=>{tab=t;scrollTo(0,0);R()};
+const go=tabName=>{tab=tabName;scrollTo(0,0);R()};
 function toggleLang(){S.lang=S.lang=='ar'?'en':'ar';save();R()}
 function ring(p,sz,sw,col,track){const r=(sz-sw)/2,c=2*Math.PI*r;return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" style="transform:rotate(-90deg)"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${track}" stroke-width="${sw}"/><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-Math.min(1,p))}"/></svg>`}
 
@@ -223,18 +240,18 @@ function R(){
 function RW(){
  const D=S.days[di];
  const tt=D.e.reduce((a,x)=>a+x.s,0),dn=D.e.reduce((a,x)=>a+mg(x,S.week).d.filter(Boolean).length,0),ex=D.e.filter(x=>mg(x,S.week).d.every(Boolean)).length,p=tt?dn/tt:0;
- let h=`<div class="hero"><div><small>${t('day')} ${di+1} من 7</small><input value="${esc(D.t)}" onchange="S.days[di].t=this.value||'يوم';save();R()"><div class="st"><span><b>${ex}/${D.e.length}</b> ${t('ex')}</span><span><b>${dn}/${tt}</b> ${t('sets')}</span></div></div>
+ let h=`<div class="hero"><div><small>${t('day')} ${di+1} من 7</small><input value="${esc(D.t)}" onchange="S.days[di].t=this.value||'Day';save();R()"><div class="st"><span><b>${ex}/${D.e.length}</b> ${t('ex')}</span><span><b>${dn}/${tt}</b> ${t('sets')}</span></div></div>
  <div class="ring">${ring(p,84,9,'#fff','rgba(255,255,255,.25)')}<b>${Math.round(p*100)}%</b></div></div>
  <div class="card dt" style="margin:0 0 10px;padding:8px 10px"><button onclick="sw(-1)">›</button><b>${t('week')} ${S.week}</b><button onclick="sw(1)">‹</button></div><div class="days">${S.days.map((d,i)=>`<button class="${i==di?'on':''} ${d.e.length?'':'rest'}" onclick="di=${i};R()"><b>${i+1}</b><small>${esc(d.t)}</small></button>`).join('')}</div>`;
  if(!D.e.length)h+=`<div class="empty">${t('restDay')}</div>`;
  D.e.forEach((x,i)=>{
-  const o=mg(x,S.week);h+=`<div class="ex ${o.d.every(Boolean)?'fin':''}"><div class="eh"><span class="n">${i+1}</span><h3>${esc(x.n)}</h3><button onclick="pgt(${i})">📈</button><button onclick="ren(${i})">✎</button><button onclick="del(${i})">🗑</button></div>
-  <div class="chips"><label class="chip">${t('restTime')} <input type="number" step="0.5" min="0" value="${x.r}" onchange="S.days[di].e[${i}].r=+this.value;save()"> د</label><button onclick="tm(S.days[di].e[${i}].r)">${t('startTimer')}</button>
+  const o=mg(x,S.week);h+=`<div class="ex ${o.d.every(Boolean)?'fin':''}"><div class="eh"><span class="n">${i+1}</span><h3>${esc(getExName(x.n))}</h3><button onclick="pgt(${i})">📈</button><button onclick="ren(${i})">✎</button><button onclick="del(${i})">🗑</button></div>
+  <div class="chips"><label class="chip">${t('restTime')} <input type="number" step="0.5" min="0" value="${x.r}" onchange="S.days[di].e[${i}].r=+this.value;save()"> min</label><button onclick="tm(S.days[di].e[${i}].r)">${t('startTimer')}</button>
   <span class="chip"><button onclick="sc(${i},-1)">−</button>${x.s} ${t('sets')}<button onclick="sc(${i},1)">+</button></span></div>
   <div class="cols"><span></span><span>${t('weight')}</span><span>${t('reps')}</span><span></span></div>
   ${o.w.map((w,j)=>`<div class="set ${o.d[j]?'done':''}"><span>${j+1}</span><input type="number" inputmode="decimal" placeholder="0" value="${esc(w)}" onchange="E(${i}).w[${j}]=this.value;save()"><input type="number" inputmode="numeric" placeholder="0" value="${esc(o.q[j]||'')}" onchange="E(${i}).q[${j}]=this.value;save()"><button class="ok" onclick="ck(${i},${j})">✓</button></div>`).join('')}${pg&&pg[0]==di&&pg[1]==i?pc(x):''}</div>`;
  });
- return h+`<button class="add" onclick="ad()">${t('addEx')}</button><p class="nt">${t('tipsText')}</p><p class="nt"><button onclick="rd()">${t('clearDay')}</button></p>`;
+ return h+`<button class="add" onclick="ad()">${t('addEx')}</button><p class="nt"><button onclick="rd()">${t('clearDay')}</button></p>`;
 }
 function mg(x,wk){
  x.wk=x.wk||{};
@@ -254,8 +271,8 @@ function sc(i,d){const x=S.days[di].e[i];if(x.s+d<1)return;x.s+=d;save();R()}
 function ad(){const n=prompt(t('exName'));if(n){S.days[di].e.push(mk(n,3,2));save();R()}}
 function tm(m){
  clearInterval(T);let s=Math.round(m*60);const b=$('#tb'),sp=b.querySelector('span');b.hidden=false;
- const u=()=>{sp.textContent='⏱ راحة '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};u();
- T=setInterval(()=>{s--;u();if(s<=0){clearInterval(T);sp.textContent='خلصت الراحة، يلا كمّل 💪';if(navigator.vibrate)navigator.vibrate([300,100,300]);setTimeout(()=>b.hidden=true,5000)}});
+ const u=()=>{sp.textContent='⏱ '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};u();
+ T=setInterval(()=>{s--;u();if(s<=0){clearInterval(T);sp.textContent='💪 Done!';if(navigator.vibrate)navigator.vibrate([300,100,300]);setTimeout(()=>b.hidden=true,5000)}});
 }
 
 /* ---------- السعرات ---------- */
@@ -265,27 +282,27 @@ function sd(n){em=-1;const d=new Date(date+'T12:00');d.setDate(d.getDate()+n);da
 function datebar(){return `<div class="dt"><button onclick="sd(-1)">›</button><b>${dname(date)}</b><button onclick="sd(1)">‹</button></div>`}
 function RM(){
  const L=S.meals[date]||[],tr=tot(date),left=S.goal-tr.k;
- const mb=(l,v,col,g)=>`<div>${l} ${v}غ<div class="mb"><i style="width:${Math.min(100,v/g*100)}%;background:${col}"></i></div></div>`;
+ const mb=(l,v,col,g)=>`<div>${l} ${v}g<div class="mb"><i style="width:${Math.min(100,v/g*100)}%;background:${col}"></i></div></div>`;
  return `<div class="card">${datebar()}<div class="big" style="margin-top:12px"><div class="ring">${ring(tr.k/S.goal,110,12,'var(--ac)','var(--bg)')}<b style="font-size:13px;text-align:center;line-height:1.1">${tr.k}<br>${t('cals')}</b></div>
  <div class="mac"><div><h2>${Math.abs(left)}</h2>${left>=0?t('left'):t('over')}</div>${mb(t('protein'),tr.p,'var(--p)',S.mt?S.mt.p:150)}${mb(t('carbs'),tr.c,'var(--c)',S.mt?S.mt.c:300)}${mb(t('fats'),tr.f,'var(--f)',S.mt?S.mt.f:80)}</div></div>
  <div class="chips" style="margin-bottom:0"><label class="chip">${t('goal')} <input type="number" value="${S.goal}" onchange="S.goal=+this.value||2500;save();R()"> ${t('cals')}</label></div></div>
  <details class="card" ${cop?'open':''} ontoggle="cop=this.open"><summary>${t('calc')}</summary>
- <div class="two" style="margin-top:10px"><select onchange="cc('sx',this.value)">${opts([['m','ذكر'],['f','أنثى']],cv('sx','m'))}</select><input type="number" inputmode="numeric" placeholder="العمر (سنة)" value="${esc(cv('a',''))}" oninput="cc('a',this.value)"></div>
- <div class="two" style="margin-top:8px"><input type="number" inputmode="decimal" placeholder="الوزن (كغ)" value="${esc(cv('w',''))}" oninput="cc('w',this.value)"><input type="number" inputmode="decimal" placeholder="الطول (سم)" value="${esc(cv('h',''))}" oninput="cc('h',this.value)"></div>
+ <div class="two" style="margin-top:10px"><select onchange="cc('sx',this.value)">${opts([['m','ذكر / Male'],['f','أنثى / Female']],cv('sx','m'))}</select><input type="number" inputmode="numeric" placeholder="العمر / Age" value="${esc(cv('a',''))}" oninput="cc('a',this.value)"></div>
+ <div class="two" style="margin-top:8px"><input type="number" inputmode="decimal" placeholder="الوزن / Weight (kg)" value="${esc(cv('w',''))}" oninput="cc('w',this.value)"><input type="number" inputmode="decimal" placeholder="الطول / Height (cm)" value="${esc(cv('h',''))}" oninput="cc('h',this.value)"></div>
  <select style="margin-top:8px" onchange="cc('act',+this.value)">${opts(ACT,cv('act',1.55))}</select>
  <select style="margin-top:8px" onchange="cc('g',+this.value)">${opts(GL,cv('g',0))}</select>
  <div id="cres" style="margin-top:12px"></div></details>
- <div class="card"><h3>أضف من قائمة الأكل</h3><input id="fsq" placeholder="${t('search')}" style="text-align:start;margin-top:10px" oninput="fs(this.value)"><div id="frs" class="fr"></div><div id="fpn"></div></div>
- <details class="card"><summary>${t('custom')}</summary><div style="margin-top:10px"><input id="mn" placeholder="اسم الوجبة" style="text-align:start"></div><div class="g4"><input id="mk" type="number" inputmode="decimal" placeholder="سعرات"><input id="mp" type="number" inputmode="decimal" placeholder="بروتين"><input id="mc" type="number" inputmode="decimal" placeholder="كارب"><input id="mf" type="number" inputmode="decimal" placeholder="دهون"></div><label class="nt"><input id="ms" type="checkbox" style="width:20px;height:20px;vertical-align:middle"> احفظها بقائمة الأكل (كحصة)</label><button class="add" onclick="am()" style="margin-top:10px">+ أضف</button><p class="nt">اترك السعرات فاضية وبنحسبها من الماكروز.</p></details>`
- +(L.length?'':cyb()+'<div class="empty">ما في وجبات مسجلة لهاليوم.</div>')
- +L.map((m,i)=>em===i?`<div class="card"><input id="en" value="${esc(m.n)}" style="text-align:start"><div class="g4"><input id="ek" type="number" inputmode="decimal" value="${m.k}"><input id="ep" type="number" inputmode="decimal" value="${m.p}"><input id="ec" type="number" inputmode="decimal" value="${m.c}"><input id="ef" type="number" inputmode="decimal" value="${m.f}"></div><p class="nt" style="margin:0">سعرات · بروتين · كارب · دهون</p><div class="two" style="margin-top:8px"><button class="add" onclick="es(${i})">حفظ</button><button onclick="em=-1;R()">إلغاء</button></div></div>`:`<div class="card ml"><span><b>${esc(m.n)}</b><br><small>${m.k} سعرة · <span class="dot" style="background:var(--p)"></span>${m.p} <span class="dot" style="background:var(--c)"></span>${m.c} <span class="dot" style="background:var(--f)"></span>${m.f}</small></span><span><button onclick="em=${i};R()">✎</button> <button onclick="dm(${i})">🗑</button></span></div>`).join('');
+ <div class="card"><h3>${t('search')}</h3><input id="fsq" placeholder="${t('search')}" style="text-align:start;margin-top:10px" oninput="fs(this.value)"><div id="frs" class="fr"></div><div id="fpn"></div></div>
+ <details class="card"><summary>${t('custom')}</summary><div style="margin-top:10px"><input id="mn" placeholder="الوجبة / Food item" style="text-align:start"></div><div class="g4"><input id="mk" type="number" placeholder="kcal"><input id="mp" type="number" placeholder="protein"><input id="mc" type="number" placeholder="carbs"><input id="mf" type="number" placeholder="fat"></div><button class="add" onclick="am()" style="margin-top:10px">+ Add</button></details>`
+ +(L.length?'':cyb()+'<div class="empty">No meals recorded for this day.</div>')
+ +L.map((m,i)=>em===i?`<div class="card"><input id="en" value="${esc(m.n)}" style="text-align:start"><div class="g4"><input id="ek" type="number" value="${m.k}"><input id="ep" type="number" value="${m.p}"><input id="ec" type="number" value="${m.c}"><input id="ef" type="number" value="${m.f}"></div><div class="two" style="margin-top:8px"><button class="add" onclick="es(${i})">Save</button><button onclick="em=-1;R()">Cancel</button></div></div>`:`<div class="card ml"><span><b>${esc(m.n)}</b><br><small>${m.k} ${t('cals')} · <span class="dot" style="background:var(--p)"></span>${m.p}g <span class="dot" style="background:var(--c)"></span>${m.c}g <span class="dot" style="background:var(--f)"></span>${m.f}g</small></span><span><button onclick="em=${i};R()">✎</button> <button onclick="dm(${i})">🗑</button></span></div>`).join('');
 }
 function am(){
- const v=id=>+$('#'+id).value||0,n=$('#mn').value.trim()||'وجبة';
+ const v=id=>+$('#'+id).value||0,n=$('#mn').value.trim()||'الوجبة';
  const p=v('mp'),c=v('mc'),f=v('mf'),k=v('mk')||Math.round(p*4+c*4+f*9);
- if(!k)return;if($('#ms')&&$('#ms').checked)(S.foods=S.foods||[]).push([n,k,p,c,f,'حصة',100]);(S.meals[date]=S.meals[date]||[]).push({n,k,p,c,f});save();R();
+ if(!k)return;(S.meals[date]=S.meals[date]||[]).push({n,k,p,c,f});save();R();
 }
-function dm(i){if(!confirm('احذف هالوجبة؟'))return;S.meals[date].splice(i,1);save();R()}
+function dm(i){S.meals[date].splice(i,1);save();R()}
 function es(i){
  const v=id=>+$('#'+id).value||0,m=S.meals[date][i],p=v('ep'),c=v('ec'),f=v('ef');
  m.n=$('#en').value.trim()||m.n;m.p=p;m.c=c;m.f=f;m.k=v('ek')||Math.round(p*4+c*4+f*9);
@@ -328,38 +345,20 @@ let fsel=null;
 function fs(q){
  q=(q||'').trim();const A=allF(),r=A.filter(f=>nz(f[0]).includes(nz(q)));
  const frs = $('#frs');
- if(frs) frs.innerHTML=r.map(f=>`<button class="fb" onclick="fp(${A.indexOf(f)})"><span>${esc(f[0])}</span><small>${f[1]} سعرة/100غ</small></button>`).join('')||'<p class="nt">ما لقينا الأكلة. أضفها يدوي تحت.</p>';
+ if(frs) frs.innerHTML=r.map(f=>`<button class="fb" onclick="fp(${A.indexOf(f)})"><span>${esc(f[0])}</span><small>${f[1]} kcal/100g</small></button>`).join('')||'<p class="nt">لم يتم العثور على العنصر.</p>';
 }
 function fp(i){
  const f=fsel=allF()[i];
  const fpn = $('#fpn');
- if(fpn) fpn.innerHTML=`<div class="fsel"><b>${esc(f[0])}</b><div class="two" style="margin:8px 0"><input id="fq" type="number" inputmode="decimal" step="any" value="${f[5]?1:100}" oninput="pv()"><select id="fu" onchange="$('#fq').value=this.value=='u'?1:100;pv()">${f[5]?`<option value="u">${esc(f[5])} (~${f[6]}غ)</option>`:''}<option value="g">غرام</option></select></div><div id="pvw" class="nt"></div><button class="add" onclick="fa()" style="margin-top:10px">+ أضف للوجبات</button><div class="two" style="margin-top:8px"><button onclick="fe()">✎ عدّل الأكلة</button><button onclick="fdl()">🗑 احذفها من القائمة</button></div></div>`;
- pv();$('#fpn').scrollIntoView({block:'nearest'});
+ if(fpn) fpn.innerHTML=`<div class="fsel"><b>${esc(f[0])}</b><div class="two" style="margin:8px 0"><input id="fq" type="number" step="any" value="${f[5]?1:100}" oninput="pv()"><select id="fu" onchange="$('#fq').value=this.value=='u'?1:100;pv()">${f[5]?`<option value="u">${esc(f[5])} (~${f[6]}g)</option>`:''}<option value="g">Grams</option></select></div><div id="pvw" class="nt"></div><button class="add" onclick="fa()" style="margin-top:10px">+ Add to meals</button></div>`;
+ pv();
 }
-function fe(){
- const f=fsel,ix=allF().findIndex(x=>x.src==f.src&&x.o==f.o);
- const fpn = $('#fpn');
- if(fpn) fpn.innerHTML=`<div class="fsel"><b>تعديل الأكلة (القيم لكل 100 غرام)</b><input id="xn" value="${esc(f[0])}" style="text-align:start;margin-top:8px"><div class="g4"><input id="xk" type="number" inputmode="decimal" value="${f[1]}"><input id="xp" type="number" inputmode="decimal" value="${f[2]}"><input id="xc" type="number" inputmode="decimal" value="${f[3]}"><input id="xf" type="number" inputmode="decimal" value="${f[4]}"></div><p class="nt" style="margin:0">سعرات · بروتين · كارب · دهون (لكل 100غ)</p><div class="two" style="margin-top:8px"><input id="xu" value="${esc(f[5]||'')}" placeholder="اسم الوحدة (بيضة، صحن)"><input id="xg" type="number" inputmode="decimal" value="${f[6]||''}" placeholder="وزنها بالغرام"></div><div class="two" style="margin-top:8px"><button class="add" onclick="fsv()">حفظ</button><button onclick="fp(${ix})">إلغاء</button></div></div>`;
-}
-function fsv(){
- const v=id=>+$('#'+id).value||0,n=$('#xn').value.trim();if(!n)return;
- const u=$('#xu').value.trim(),g=v('xg'),a=[n,v('xk'),v('xp'),v('xc'),v('xf')];
- if(u&&g>0)a.push(u,g);
- if(fsel.src=='b'){S.fx=S.fx||{};S.fx[fsel.o]=a}else S.foods[fsel.o]=a;
- save();R();
-}
-function fdl(){
- if(!confirm('تحذف "'+fsel[0]+'" من قائمة الأكل؟'))return;
- if(fsel.src=='b'){S.fx=S.fx||{};S.fx[fsel.o]=null}else S.foods.splice(fsel.o,1);
- save();R();
-}
-function rf(){if(confirm('بدك ترجّع قائمة الأكل الأصلية؟ بيلغي تعديلاتك وحذفك للأكلات الأساسية (الأكلات اللي أضفتها إنت بتضل).')){S.fx={};save();R()}}
 function fg(){const q=+$('#fq').value||0;return $('#fu').value=='u'?q*fsel[6]:q}
-function pv(){const m=fg()/100,f=fsel;const pvw = $('#pvw'); if(pvw) pvw.innerHTML=`<b style="color:var(--tx);font-size:18px">${Math.round(f[1]*m)} سعرة</b> · بروتين ${r1(f[2]*m)}غ · كارب ${r1(f[3]*m)}غ · دهون ${r1(f[4]*m)}غ`}
+function pv(){const m=fg()/100,f=fsel;const pvw = $('#pvw'); if(pvw) pvw.innerHTML=`<b style="color:var(--tx);font-size:18px">${Math.round(f[1]*m)} ${t('cals')}</b> · P ${r1(f[2]*m)}g · C ${r1(f[3]*m)}g · F ${r1(f[4]*m)}g`}
 function fa(){
  const m=fg()/100,f=fsel,q=+$('#fq').value||0;if(!q)return;
  const u=$('#fu').value=='u';
- (S.meals[date]=S.meals[date]||[]).push({n:`${f[0]} · ${q} ${u?f[5]:'غ'}`,k:Math.round(f[1]*m),p:r1(f[2]*m),c:r1(f[3]*m),f:r1(f[4]*m)});
+ (S.meals[date]=S.meals[date]||[]).push({n:`${f[0]} · ${q} ${u?f[5]:'g'}`,k:Math.round(f[1]*m),p:r1(f[2]*m),c:r1(f[3]*m),f:r1(f[4]*m)});
  save();R();
 }
 const nz=s=>s.replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[\u064B-\u0652]/g,'');
@@ -372,66 +371,60 @@ function pc(x){
  if(!vs.some(v=>v>0))return '<p class="nt">سجّل أوزان لتشوف التقدم.</p>';
  const n=ks.length,mx=Math.max(...vs),mn=Math.min(...vs),st=n>1?250/(n-1):0,X=i=>n>1?275-i*st:150,Y=v=>mx==mn?50:95-(v-mn)/(mx-mn)*60;
  const pts=vs.map((v,i)=>X(i)+','+Y(v)).join(' ');
- return `<div style="margin-top:12px"><p class="nt" style="margin:0 0 4px">أعلى وزن بكل أسبوع (كغ)</p><svg class="ch" viewBox="0 0 300 120"><polyline points="${pts}" fill="none" stroke="var(--ac)" stroke-width="2.5"/>${vs.map((v,i)=>`<circle cx="${X(i)}" cy="${Y(v)}" r="4" fill="var(--ac)"/><text x="${X(i)}" y="${Y(v)-9}" text-anchor="middle" font-size="11" font-weight="700" fill="var(--tx)">${v}</text><text x="${X(i)}" y="115" text-anchor="middle" font-size="10" fill="var(--mu)">أ${ks[i]}</text>`).join('')}</svg></div>`;
+ return `<div style="margin-top:12px"><p class="nt" style="margin:0 0 4px">أعلى وزن بكل أسبوع (كغ)</p><svg class="ch" viewBox="0 0 300 120"><polyline points="${pts}" fill="none" stroke="var(--ac)" stroke-width="2.5"/>${vs.map((v,i)=>`<circle cx="${X(i)}" cy="${Y(v)}" r="4" fill="var(--ac)"/><text x="${X(i)}" y="${Y(v)-9}" text-anchor="middle" font-size="11" font-weight="700" fill="var(--tx)">${v}</text><text x="${X(i)}" y="115" text-anchor="middle" font-size="10" fill="var(--mu)">W${ks[i]}</text>`).join('')}</svg></div>`;
 }
 
 /* ---------- حاسبة السعرات ---------- */
 let cop=false;
 const cv=(k,d)=>S.calc&&S.calc[k]!=null?S.calc[k]:d;
 const opts=(L,cur)=>L.map(([v,l])=>`<option value="${v}" ${v==cur?'selected':''}>${l}</option>`).join('');
-const ACT=[[1.2,'قليل الحركة (بدون تمرين)'],[1.375,'نشاط خفيف (تمرين 1-3 أيام)'],[1.55,'نشاط متوسط (تمرين 3-5 أيام)'],[1.725,'نشاط عالي (تمرين 6-7 أيام)']];
-const GL=[[-0.2,'هدفي: خسارة دهون (-20%)'],[0,'هدفي: ثبات الوزن'],[0.1,'هدفي: زيادة عضل (+10%)']];
+const ACT=[[1.2,'قليل الحركة / Sedentary'],[1.375,'نشاط خفيف / Light Active'],[1.55,'نشاط متوسط / Moderate'],[1.725,'نشاط عالي / High Active']];
+const GL=[[-0.2,'خسارة دهون (-20%)'],[0,'ثبات الوزن / Maintain'],[0.1,'زيادة عضل (+10%)']];
 function cc(k,v){S.calc=S.calc||{};S.calc[k]=v;save();cr()}
 function cr(){
  const e=$('#cres');if(!e)return;
  const a=+cv('a',0),w=+cv('w',0),h=+cv('h',0);
- if(!a||!w||!h){e.innerHTML='<p class="nt">دخّل عمرك ووزنك وطولك لتشوف النتيجة.</p>';return}
- if(a<14||a>90||w<30||w>250||h<120||h>230){e.innerHTML='<p class="nt" style="color:#d33">تأكد من القيم (العمر بالسنين، الوزن بالكغ، الطول بالسم).</p>';return}
+ if(!a||!w||!h){e.innerHTML='<p class="nt">دخّل بياناتك لتشوف النتيجة.</p>';return}
  const bmr=10*w+6.25*h-5*a+(cv('sx','m')=='f'?-161:5),tdee=bmr*cv('act',1.55),t=Math.round(tdee*(1+cv('g',0)));
  const p=Math.round(w*2),f=Math.round(w*0.8),cb=Math.max(0,Math.round((t-p*4-f*9)/4));
- e.innerHTML=`<p class="nt" style="margin:0 0 8px">الحرق الأساسي (BMR): <b>${Math.round(bmr)}</b> · حرقك اليومي مع نشاطك: <b>${Math.round(tdee)}</b> سعرة</p>
- <div class="fsel" style="margin-top:0"><b style="font-size:22px">${t} سعرة باليوم</b><div class="nt" style="margin:4px 0 0">بروتين ${p}غ · كارب ${cb}غ · دهون ${f}غ</div><button class="add" onclick="sg(${t},${p},${cb},${f})" style="margin-top:10px">اعتمدها كهدف يومي</button></div>
- <p class="nt">تقدير تقريبي بمعادلة Mifflin-St Jeor، والبروتين 2غ لكل كغ والدهون 0.8غ لكل كغ. راقب وزنك 2-3 أسابيع وعدّل الهدف حسب النتيجة.</p>`;
+ e.innerHTML=`<div class="fsel" style="margin-top:0"><b style="font-size:22px">${t} kcal / day</b><div class="nt" style="margin:4px 0 0">Protein ${p}g · Carbs ${cb}g · Fat ${f}g</div><button class="add" onclick="sg(${t},${p},${cb},${f})" style="margin-top:10px">Set as Daily Goal</button></div>`;
 }
 function sg(t,p,c,f){S.goal=t;S.mt={p,c,f};save();R()}
 
 /* ---------- الإعدادات والنسخ ---------- */
 function bj(){return JSON.stringify(S)}
 function sbk(){S.bk=Date.now();save()}
-function shT(){sbk();if(navigator.share)navigator.share({title:'نسخة احتياطية',text:bj()});else cp()}
-function cp(){sbk();navigator.clipboard.writeText(bj());if($('#bs'))$('#bs').textContent='تم النسخ إلى الحافظة!'}
+function shT(){sbk();if(navigator.share)navigator.share({title:'Backup',text:bj()});else cp()}
+function cp(){sbk();navigator.clipboard.writeText(bj());if($('#bs'))$('#bs').textContent='Copied to clipboard!'}
 function shF(){sbk();const b=new Blob([bj()],{type:'application/json'});if(navigator.share&&navigator.canShare&&navigator.canShare({files:[new File([b],'backup.json')]}))navigator.share({files:[new File([b],'backup.json')]});else ex()}
-function ex(){sbk();const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([bj()],{type:'application/json'}));a.download=`backup-${today()}.json`;a.click()}
+function ex(){sbk();const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([bj()],{type:'application/json'}));a.download=`workout-backup-${today()}.json`;a.click()}
 function im(f){if(!f)return;const r=new FileReader();r.onload=e=>ld(e.target.result);r.readAsText(f)}
-function ld(str){try{const d=JSON.parse(str);if(d&&d.days){S=mig(d);save();R();alert('تمت استعادة البيانات بنجاح!')}}catch(e){alert('الملف أو النص غير صالحة')}}
-function wipe(){if(confirm('هل أنت تأكد من مسح كل البيانات؟')){localStorage.removeItem(K);location.reload()}}
+function ld(str){try{const d=JSON.parse(str);if(d&&d.days){S=mig(d);save();R();alert('Restored successfully!')}}catch(e){alert('Invalid backup file/text')}}
+function wipe(){if(confirm('هل أنت متأكد من مسح كل البيانات؟')){localStorage.removeItem(K);location.reload()}}
 
-function hasD(){return Object.keys(S.meals).length>0||S.days.some(d=>d.e.some(x=>Object.values(x.wk||{}).some(o=>o.w.some(Boolean))))}
-function bn(){return tab!='s'&&hasD()&&(!S.bk||Date.now()-S.bk>6048e5)?`<div class="card dt" style="margin:0 0 10px;padding:10px 12px;background:var(--tint)"><span class="nt" style="margin:0;color:var(--tx)">⚠️ ما خدت نسخة احتياطية من أسبوع. بياناتك محفوظة عالمتصفح بس.</span><button onclick="go('s')">خد نسخة</button></div>`:''}
 function RS(){
- const b=S.bk?new Date(S.bk).toLocaleDateString('ar',{weekday:'long',day:'numeric',month:'long'}):'ما أخدت ولا وحدة';
- return `<div class="card"><h3>النسخة الاحتياطية</h3><p class="nt">آخر نسخة: ${b}</p>
- <button class="add" onclick="shT()" style="margin-top:10px">📤 شارك النسخة (واتساب، ملاحظات...)</button>
- <div class="two" style="margin-top:8px"><button onclick="cp()">📋 انسخ النسخة</button><button onclick="shF()">📎 شارك كملف</button></div>
- <div class="two" style="margin-top:8px"><button onclick="ex()">⬇️ حمّل ملف</button><button onclick="$('#imf').click()">📂 استرجع من ملف</button></div>
+ const b=S.bk?new Date(S.bk).toLocaleDateString(S.lang=='ar'?'ar':'en-US',{weekday:'long',day:'numeric',month:'long'}): (S.lang=='ar'?'ما أخدت ولا وحدة':'None');
+ return `<div class="card"><h3>${t('backup')}</h3><p class="nt">${t('lastBackup')}: ${b}</p>
+ <button class="add" onclick="shT()" style="margin-top:10px">${t('shareBackup')}</button>
+ <div class="two" style="margin-top:8px"><button onclick="cp()">${t('copyBackup')}</button><button onclick="shF()">${t('shareFile')}</button></div>
+ <div class="two" style="margin-top:8px"><button onclick="ex()">${t('downloadFile')}</button><button onclick="$('#imf').click()">${t('restoreFile')}</button></div>
  <input id="imf" type="file" hidden onchange="im(this.files[0])">
  <p id="bs" class="nt" style="color:var(--tx)"></p>
- <details id="bkd"><summary class="nt">النص (للنسخ أو الاسترجاع اليدوي)</summary><textarea id="bkt" readonly rows="4" style="width:100%;margin-top:8px;border-radius:12px;border:0;background:var(--bg);color:var(--tx);padding:8px;font:12px monospace;direction:ltr">${esc(bj())}</textarea><textarea id="rtx" rows="3" placeholder="الصق النسخة هون للاسترجاع" style="width:100%;margin-top:8px;border-radius:12px;border:0;background:var(--bg);color:var(--tx);padding:8px;font:12px monospace;direction:ltr"></textarea><button onclick="ld($('#rtx').value)" style="width:100%;margin-top:8px">استرجع من النص</button></details>
- <p class="nt">الأسهل: اضغط "شارك النسخة" وابعتها لنفسك على واتساب أو احفظها بالملاحظات. للاسترجاع افتح "النص" والصقها بالصندوق الثاني.</p></div>
- <div class="card"><h3>إعدادات</h3><label class="nt" style="display:flex;gap:10px;align-items:center"><input type="checkbox" style="width:24px;height:24px" ${S.at!==false?'checked':''} onchange="S.at=this.checked;save()"> شغّل مؤقت الراحة تلقائياً لما أعلّم مجموعة</label></div>
- <div class="card"><h3>حتى ما تضيع بياناتك</h3><p class="nt">آيفون: افتح الموقع بسفاري ← مشاركة ← "إضافة إلى الشاشة الرئيسية". بدونها آيفون ممكن يمسح بيانات المواقع إذا ما فتحتها أسبوع.<br>أندرويد: كروم ← ⋮ ← "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية".<br>لا تفتح الموقع بوضع التصفح الخفي، ولا تمسح بيانات الموقع من إعدادات المتصفح.</p></div>
- <div class="card"><button onclick="rf()" style="width:100%">رجّع قائمة الأكل الأصلية</button></div>
- <div class="card"><button onclick="wipe()" style="width:100%;color:#d33">مسح كل البيانات</button></div>`;
+ <details id="bkd"><summary class="nt">${t('manualText')}</summary><textarea id="bkt" readonly rows="4" style="width:100%;margin-top:8px;border-radius:12px;border:0;background:var(--bg);color:var(--tx);padding:8px;font:12px monospace;direction:ltr">${esc(bj())}</textarea><textarea id="rtx" rows="3" placeholder="Paste backup here..." style="width:100%;margin-top:8px;border-radius:12px;border:0;background:var(--bg);color:var(--tx);padding:8px;font:12px monospace;direction:ltr"></textarea><button onclick="ld($('#rtx').value)" style="width:100%;margin-top:8px">${t('restoreText')}</button></details>
+ <p class="nt">${t('backupTip')}</p></div>
+ <div class="card"><h3>${t('settingsTitle')}</h3><label class="nt" style="display:flex;gap:10px;align-items:center"><input type="checkbox" style="width:24px;height:24px" ${S.at!==false?'checked':''} onchange="S.at=this.checked;save()"> ${t('autoTimer')}</label></div>
+ <div class="card"><h3>Data Safety</h3><p class="nt">${t('iphoneWarn')}<br><br>${t('androidWarn')}<br><br>${t('privateWarn')}</p></div>
+ <div class="card"><button onclick="wipe()" style="width:100%;color:#d33">${t('wipeData')}</button></div>`;
 }
 
 /* ---------- الرسم البياني ---------- */
 function RC(){
  const ds=[];for(let i=6;i>=0;i--){const d=new Date(date+'T12:00');d.setDate(d.getDate()-i);ds.push(iso(d))}
  const TT=ds.map(tot),mx=Math.max(S.goal,...TT.map(t=>t.k),1)*1.15,H=150,gy=H+10-S.goal/mx*H;
- let s=`<div class="card"><h3>استهلاك السعرات آخر 7 أيام</h3><svg class="ch" viewBox="0 0 330 200"><line x1="0" x2="330" y1="${gy}" y2="${gy}" stroke="var(--mu)" stroke-dasharray="4"/>`;
+ let s=`<div class="card"><h3>${t('cal')} (7 Days)</h3><svg class="ch" viewBox="0 0 330 200"><line x1="0" x2="330" y1="${gy}" y2="${gy}" stroke="var(--mu)" stroke-dasharray="4"/>`;
  TT.forEach((t,i)=>{
   const x=(6-i)*47+18,h=t.k>0?Math.max(4,(t.k/mx)*H):0,y=H+10-h;
-  s+=`<rect x="${x-12}" y="${y}" width="24" height="${h}" rx="6" fill="var(--ac)" opacity="${ds[6-i]==date?1:0.6}"/><text x="${x}" y="${y-6}" text-anchor="middle" font-size="10" font-weight="700" fill="var(--tx)">${t.k?t.k:''}</text><text x="${x}" y="180" text-anchor="middle" font-size="10" fill="var(--mu)">${ds[6-i].slice(8)}</text>`;
+  s+=`<rect x="${x-12}" y="${y}" width="24" height="${h}" rx="6" fill="var(--ac)" opacity="${ds[6-i]==date?1:0.6}"/><text x="${x}" y="${y-6}" text-anchor="middle" font-size="10" font-weight="700" fill="var(--tx)">${t.k?t.k:''}</text><text x="${x}" y="180" text-anchor="middle" font-size="10" font-weight="700" fill="var(--mu)">${ds[6-i].slice(8)}</text>`;
  });
  s+=`</svg></div>`;
  return s;
