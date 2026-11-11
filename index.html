@@ -77,8 +77,8 @@ h3{font-size:17px;font-weight:800}
 .set{margin:7px 0}
 .set input{font-size:17px}
 .set>span{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:var(--bg);font-weight:800;color:var(--mu)}
-.set .ok{width:46px;height:46px;border-radius:50%;padding:0;background:var(--bg);color:transparent;font-size:20px}
-.set.done .ok{background:var(--f);color:#fff}
+.set .ok{width:46px;height:46px;border-radius:50%;padding:0;background:var(--bg);color:var(--mu);opacity:.45;font-size:20px;display:grid;place-items:center}
+.set.done .ok{background:var(--f);color:#fff;opacity:1}
 .set.done input{background:var(--tint)}
 .set.done>span{background:var(--f);color:#fff}
 .add{width:100%;background:linear-gradient(135deg,var(--hero),var(--hero2));color:#fff;padding:13px;font-size:16px;border-radius:16px;box-shadow:0 8px 18px rgba(91,75,255,.28)}
@@ -144,6 +144,18 @@ h3{font-size:17px;font-weight:800}
 .cups{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
 .cup{width:28px;height:34px;border-radius:8px 8px 13px 13px;background:var(--bg);border:2px solid var(--ln);padding:0}
 .cup.on{background:#3b9bff;border-color:#3b9bff}
+.i{width:1.15em;height:1.15em;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.22em}
+.i.g{margin-inline-end:.4em}
+.i.f{fill:currentColor}
+.i.big{display:block;width:40px;height:40px;margin:0 auto 8px;color:var(--mu)}
+h3 .i,summary .i,.gh .i,.sug .i{color:var(--ac)}
+.logo .i{width:22px;height:22px;color:#fff}
+.set .ok .i{width:22px;height:22px;stroke-width:2.8}
+.eh button .i{width:18px;height:18px}
+.sa button .i{width:18px;height:18px}
+.toast{display:flex;align-items:center}
+.toast .i{color:#ffd166}
+.cats .dot{width:10px;height:10px;border-radius:50%;margin-inline-end:6px;box-shadow:0 0 0 1.5px rgba(255,255,255,.6)}
 .sr{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--ln)}
 .sr>span:first-child{flex:1;min-width:0}
 .sa{flex:none;display:flex;gap:2px}
@@ -178,8 +190,8 @@ h3{font-size:17px;font-weight:800}
 select{width:100%;background:var(--bg);color:var(--tx);border:1.5px solid transparent;border-radius:14px;padding:11px 10px;font-weight:700}
 details summary{cursor:pointer;font-weight:800;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:8px}
 details summary::-webkit-details-marker{display:none}
-details summary:after{content:"⌄";color:var(--mu);font-size:18px;transition:transform .2s}
-details[open] summary:after{transform:rotate(180deg)}
+details summary:after{content:"";flex:none;width:8px;height:8px;border-right:2px solid var(--mu);border-bottom:2px solid var(--mu);transform:rotate(45deg) translateY(-2px);transition:transform .2s}
+details[open] summary:after{transform:rotate(-135deg) translate(-2px,0)}
 .cats{display:flex;gap:8px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:none}
 .cats button{flex:0 0 auto;padding:7px 12px;border-radius:999px;background:var(--bg);color:var(--tx);font-size:13px;white-space:nowrap}
 .cats button.on{background:var(--ac);color:#fff}
@@ -198,6 +210,9 @@ details[open] summary:after{transform:rotate(180deg)}
 <div id="sheet" hidden></div>
 <script>
 const K='ali-shahidah-v1';
+const ICN={"timer": "<circle cx=\"12\" cy=\"13.5\" r=\"7.5\"/><path d=\"M12 9.5v4l2.5 1.5M9.5 3h5\"/>", "play": "<path d=\"M8 5.5v13l11-6.5z\"/>", "pause": "<rect x=\"6.5\" y=\"5\" width=\"3.8\" height=\"14\" rx=\"1\"/><rect x=\"13.7\" y=\"5\" width=\"3.8\" height=\"14\" rx=\"1\"/>", "stop": "<rect x=\"6\" y=\"6\" width=\"12\" height=\"12\" rx=\"2.5\"/>", "plus": "<path d=\"M12 5v14M5 12h14\"/>", "minus": "<path d=\"M5 12h14\"/>", "x": "<path d=\"M6 6l12 12M18 6L6 18\"/>", "check": "<path d=\"M5 12.5l4.5 4.5L19 7.5\"/>", "checkc": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 12.5l3 3 5-6\"/>", "edit": "<path d=\"M16.5 3.5l4 4L8 20l-5 1 1-5z\"/><path d=\"M14 6l4 4\"/>", "trash": "<path d=\"M3.5 6.5h17M9.5 6.5V4h5v2.5M6 6.5l1 13a1.5 1.5 0 0 0 1.5 1.5h7a1.5 1.5 0 0 0 1.5-1.5l1-13M10 11v6M14 11v6\"/>", "save": "<path d=\"M5 4h11l3 3v13H5z\"/><path d=\"M8 4v5h7V4M8 20v-6h8v6\"/>", "star": "<path d=\"M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.9l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z\"/>", "trend": "<path d=\"M3 17l6-6 4 4 8-8M15 7h6v6\"/>", "utensils": "<path d=\"M7 3v8M4 3v5a3 3 0 0 0 6 0V3M7 11v10M17 3c-2 2-3 5-3 8h3v10\"/>", "bulb": "<path d=\"M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z\"/>", "sunrise": "<path d=\"M12 4v3M5.6 8.6l1.8 1.8M18.4 8.6l-1.8 1.8M3 17h18M7 17a5 5 0 0 1 10 0M4 21h16\"/>", "sun": "<circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4\"/>", "moon": "<path d=\"M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z\"/>", "apple": "<path d=\"M12 7c-1.5-1.5-5-1.5-6 1.5-1 3.5 1 9 4 10.5 1 .5 1.5.5 2 .5s1 0 2-.5c3-1.5 5-7 4-10.5-1-3-4.5-3-6-1.5z\"/><path d=\"M12 7c0-2 1-3.5 3-4\"/>", "trophy": "<path d=\"M8 4h8v5a4 4 0 0 1-8 0zM8 6H5v1a3 3 0 0 0 3 3M16 6h3v1a3 3 0 0 1-3 3M12 13v4M9 20h6M10 17h4v3h-4z\"/>", "history": "<path d=\"M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2\"/>", "note": "<path d=\"M5 4h14v16H5zM9 9h6M9 13h6M9 17h3\"/>", "chart": "<path d=\"M5 20V11M12 20V4M19 20v-6\"/>", "cal": "<rect x=\"4\" y=\"5\" width=\"16\" height=\"15\" rx=\"2\"/><path d=\"M4 10h16M9 3v4M15 3v4\"/>", "drop": "<path d=\"M12 3c3 4 6 7 6 10.5a6 6 0 0 1-12 0C6 10 9 7 12 3z\"/>", "zap": "<path d=\"M13 3L5 13.5h6L10 21l8-10.5h-6z\"/>", "search": "<circle cx=\"11\" cy=\"11\" r=\"6.5\"/><path d=\"M16 16l4.5 4.5\"/>", "barcode": "<path d=\"M3 6v12M7 6v12M11 6v12M14 6v12M18 6v12M21 6v12\"/>", "calc": "<rect x=\"5\" y=\"3\" width=\"14\" height=\"18\" rx=\"2\"/><path d=\"M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01\"/>", "refresh": "<path d=\"M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5\"/>", "alert": "<path d=\"M12 4l9 16H3zM12 10v4M12 17.2v.01\"/>", "share": "<path d=\"M12 3v12M8 7l4-4 4 4M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6\"/>", "download": "<path d=\"M12 3v12M8 11l4 4 4-4M5 19h14\"/>", "folder": "<path d=\"M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/>", "undo": "<path d=\"M9 14L4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3\"/>", "layers": "<path d=\"M12 3l9 5-9 5-9-5z\"/><path d=\"M3 13l9 5 9-5\"/>", "dumbbell": "<path d=\"M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11\"/>", "chl": "<path d=\"M15 5l-7 7 7 7\"/>", "chr": "<path d=\"M9 5l7 7-7 7\"/>"};
+const I=(n,c='')=>`<svg class="i ${c}" viewBox="0 0 24 24" aria-hidden="true">${ICN[n]||''}</svg>`;
+
 const mk=(n,s,r)=>({n,s,r,wk:{1:{w:Array(s).fill(''),q:Array(s).fill(''),d:Array(s).fill(false)}}});
 const def=()=>({goal:2500,week:1,meals:{},days:[
 {t:'Push',e:[mk('ضغط دمبل مائل للأعلى (صدر)',4,3),mk('فراشة صدر',3,2),mk('ضغط دمبل جانبي (أكتاف)',2,3),mk('رفرفة جانبية (كتف جانبي)',3,2),mk('دفع سيخ خلف الرأس (ترايسبس)',3,2),mk('دفع سيخ للأسفل (ترايسبس)',3,2),mk('طحن معدة بالحبل',3,2)]},
@@ -235,18 +250,18 @@ function RW(){
  const tt=D.e.reduce((a,x)=>a+x.s,0),dn=D.e.reduce((a,x)=>a+mg(x,S.week).d.filter(Boolean).length,0),ex=D.e.filter(x=>mg(x,S.week).d.every(Boolean)).length,p=tt?dn/tt:0;
  let h=`<div class="hero"><div><small>يوم ${di+1} من 7</small><input value="${esc(TR(D.t))}" onchange="S.days[di].t=this.value||'يوم';save();R()"><div class="st"><span><b>${ex}/${D.e.length}</b> تمارين</span><span><b>${dn}/${tt}</b> مجموعات</span></div></div>
  <div class="ring">${ring(p,84,9,'#fff','rgba(255,255,255,.25)')}<b>${Math.round(p*100)}%</b></div></div>
- ${SES()}<div class="card dt" style="margin:0 0 10px;padding:8px 10px"><button onclick="sw(-1)">${LANG=='en'?'‹':'›'}</button><b>الأسبوع ${S.week}</b><button onclick="sw(1)">${LANG=='en'?'›':'‹'}</button></div><div class="days">${S.days.map((d,i)=>`<button class="${i==di?'on':''} ${d.e.length?'':'rest'}" onclick="di=${i};R()"><b>${i+1}</b><small>${esc(d.t)}</small></button>`).join('')}</div>
+ ${SES()}<div class="card dt" style="margin:0 0 10px;padding:8px 10px"><button onclick="sw(-1)">${I(LANG=='en'?'chl':'chr')}</button><b>الأسبوع ${S.week}</b><button onclick="sw(1)">${I(LANG=='en'?'chr':'chl')}</button></div><div class="days">${S.days.map((d,i)=>`<button class="${i==di?'on':''} ${d.e.length?'':'rest'}" onclick="di=${i};R()"><b>${i+1}</b><small>${esc(d.t)}</small></button>`).join('')}</div>
  <div class="card dt" style="margin:0 0 10px;padding:8px 10px"><span style="flex:none">نوع اليوم</span><select style="flex:1" onchange="dt(this.value)">${DT.concat(DT.includes(D.t)?[]:[D.t]).map(x=>`<option value="${esc(x)}" ${x==D.t?'selected':''}>${esc(x)}</option>`).join('')}</select></div>`;
- if(!D.e.length)h+=`<div class="empty">يوم راحة 😴<br>ضيف تمرين إذا بدك تتمرن اليوم.</div>`;
+ if(!D.e.length)h+=`<div class="empty">${I('moon','big')}يوم راحة<br>ضيف تمرين إذا بدك تتمرن اليوم.</div>`;
  D.e.forEach((x,i)=>{
-  const o=mg(x,S.week);h+=`<div class="ex ${o.d.every(Boolean)?'fin':''}"><div class="eh"><span class="n">${i+1}</span><h3>${esc(x.n)}</h3><button onclick="pgt(${i})">📈</button><button onclick="ren(${i})">✎</button><button onclick="del(${i})">🗑</button></div>
-  <div class="chips"><label class="chip">راحة <input type="number" step="0.5" min="0" value="${x.r}" onchange="S.days[di].e[${i}].r=+this.value;save()"> د</label><button onclick="tm(S.days[di].e[${i}].r)">⏱ ابدأ</button>
-  <span class="chip"><button onclick="sc(${i},-1)">−</button>${x.s} مجموعات<button onclick="sc(${i},1)">+</button></span></div>
+  const o=mg(x,S.week);h+=`<div class="ex ${o.d.every(Boolean)?'fin':''}"><div class="eh"><span class="n">${i+1}</span><h3>${esc(x.n)}</h3><button onclick="pgt(${i})">${I('trend')}</button><button onclick="ren(${i})">${I('edit')}</button><button onclick="del(${i})">${I('trash')}</button></div>
+  <div class="chips"><label class="chip">راحة <input type="number" step="0.5" min="0" value="${x.r}" onchange="S.days[di].e[${i}].r=+this.value;save()"> د</label><button onclick="tm(S.days[di].e[${i}].r)">${I('timer','g')}ابدأ</button>
+  <span class="chip"><button onclick="sc(${i},-1)">${I('minus')}</button>${x.s} مجموعات<button onclick="sc(${i},1)">${I('plus')}</button></span></div>
   ${xInfo(x,i,o)}
   <div class="cols"><span></span><span>الوزن (كغ)</span><span>العدات</span><span></span></div>
-  ${o.w.map((w,j)=>`<div class="set ${o.d[j]?'done':''}"><span>${j+1}</span><input type="number" inputmode="decimal" placeholder="0" value="${esc(w)}" onchange="E(${i}).w[${j}]=this.value;save()"><input type="number" inputmode="numeric" placeholder="0" value="${esc(o.q[j]||'')}" onchange="E(${i}).q[${j}]=this.value;save()"><button class="ok" onclick="ck(${i},${j})">✓</button></div>`).join('')}${xDet(x,i)}${pg&&pg[0]==di&&pg[1]==i?pc(x):''}</div>`;
+  ${o.w.map((w,j)=>`<div class="set ${o.d[j]?'done':''}"><span>${j+1}</span><input type="number" inputmode="decimal" placeholder="0" value="${esc(w)}" onchange="E(${i}).w[${j}]=this.value;save()"><input type="number" inputmode="numeric" placeholder="0" value="${esc(o.q[j]||'')}" onchange="E(${i}).q[${j}]=this.value;save()"><button class="ok" onclick="ck(${i},${j})">${I('check')}</button></div>`).join('')}${xDet(x,i)}${pg&&pg[0]==di&&pg[1]==i?pc(x):''}</div>`;
  });
- return h+`<button class="add" onclick="ad()">+ تمرين جديد</button><p class="nt">الشدة: قبل الفشل العضلي بـ 1-2 عدّة. الزفير عند بذل العزم والشهيق عند الإرخاء. سخّن بإطالات حركية قبل التمرين وإطالات ثابتة بعده.</p><p class="nt"><button onclick="rd()">صفّر علامات اليوم</button></p>`;
+ return h+`<button class="add" onclick="ad()">${I('plus','g')}تمرين جديد</button><p class="nt">الشدة: قبل الفشل العضلي بـ 1-2 عدّة. الزفير عند بذل العزم والشهيق عند الإرخاء. سخّن بإطالات حركية قبل التمرين وإطالات ثابتة بعده.</p><p class="nt"><button onclick="rd()">صفّر علامات اليوم</button></p>`;
 }
 function mg(x,wk){
  x.wk=x.wk||{};
@@ -260,7 +275,7 @@ function E(i){return mg(S.days[di].e[i],S.week)}
 function sw(n){S.week=Math.max(1,S.week+n);save();R()}
 function ck(i,j){const x=S.days[di].e[i],o=E(i);o.d[j]=!o.d[j];save();
  {const d=today();S.tl=S.tl||{};S.tl[d]=Math.max(0,(S.tl[d]||0)+(o.d[j]?1:-1))}
- if(o.d[j]){const W=nn(o.w[j]),Q=nn(o.q[j]),b=dsets(x,S.week,j);if(W>0&&b.length&&(W>Math.max(...b.map(z=>z.w))||e1(W,Q)>Math.max(...b.map(z=>e1(z.w,z.q)))+.01)){toast('🏆 رقم قياسي! '+x.n+': '+W+'×'+Q);vb([60,40,60,40,120])}}
+ if(o.d[j]){const W=nn(o.w[j]),Q=nn(o.q[j]),b=dsets(x,S.week,j);if(W>0&&b.length&&(W>Math.max(...b.map(z=>z.w))||e1(W,Q)>Math.max(...b.map(z=>e1(z.w,z.q)))+.01)){toast('رقم قياسي! '+x.n+': '+W+'×'+Q,'trophy');vb([60,40,60,40,120])}}
  if(o.d[j]&&S.ses&&i==S.days[di].e.length-1&&o.d.every(Boolean))sesAuto();if(o.d[j]&&j<x.s-1&&S.at!==false)tm(x.r);R()}
 function rd(){S.days[di].e.forEach(x=>{const o=mg(x,S.week);o.d=o.d.map(()=>false)});save();R()}
 function ren(i){const x=S.days[di].e[i],n=prompt('اسم التمرين',x.n);if(n){x.n=n;save();R()}}
@@ -274,26 +289,26 @@ function sesS(){S.ses={st:Date.now(),acc:0,run:true};save();vb(60);R()}
 function sesP(){const e=S.ses;if(!e||!e.run)return;e.acc+=Date.now()-e.st;e.run=false;save();R()}
 function sesR(){const e=S.ses;if(!e||e.run)return;e.st=Date.now();e.run=true;save();R()}
 function sesF(){const ms=sesMs();if(!confirm(TR('أنهي التمرين وأحفظ المدة؟')+' '+sfmt(ms)))return;if(ms>=1000){S.dur=S.dur||{};const d=today();S.dur[d]=(S.dur[d]||0)+ms}S.ses=null;save();vb([80,60,80]);R()}
-function sesAuto(){const ms=sesMs();if(ms>=1000){S.dur=S.dur||{};const d=today();S.dur[d]=(S.dur[d]||0)+ms}S.ses=null;save();vb([80,60,80]);toast('🎉 خلصت التمرين · '+sfmt(ms))}
+function sesAuto(){const ms=sesMs();if(ms>=1000){S.dur=S.dur||{};const d=today();S.dur[d]=(S.dur[d]||0)+ms}S.ses=null;save();vb([80,60,80]);toast('خلصت التمرين · '+sfmt(ms),'checkc')}
 function sesX(){if(!confirm(TR('تجاهل الجلسة بدون حفظ؟')))return;S.ses=null;save();R()}
 function SES(){
  const e=S.ses,run=e&&e.run,ks=Object.keys(S.dur||{}).sort(),ld=ks[ks.length-1];
- if(!e)return `<div class="card ses"><div class="sl"><span>⏱ مدة التمرين</span>${ld?`<span>آخر جلسة: ${Math.max(1,Math.round(S.dur[ld]/60000))} د · ${new Date(ld+'T12:00').toLocaleDateString(LG(),{weekday:'short'})}</span>`:''}</div><div class="sd stt">00:00</div><button class="add" onclick="sesS()">▶ ابدأ التمرين</button></div>`;
- return `<div class="card ses ${run?'run':''}"><div class="sl"><span>⏱ مدة التمرين</span><span>${run?'<i class="pulse"></i>شغّال':'⏸ متوقف'}</span></div><div class="sd stt">${sfmt(sesMs())}</div><div class="two">${run?`<button onclick="sesP()">⏸ إيقاف مؤقت</button>`:`<button class="add" onclick="sesR()">▶ كمّل</button>`}<button class="stop" onclick="sesF()">⏹ إنهاء</button></div>${run?'':`<p class="nt" style="margin:0"><button onclick="sesX()">تجاهل الجلسة</button></p>`}</div>`;
+ if(!e)return `<div class="card ses"><div class="sl"><span>${I('timer','g')}مدة التمرين</span>${ld?`<span>آخر جلسة: ${Math.max(1,Math.round(S.dur[ld]/60000))} د · ${new Date(ld+'T12:00').toLocaleDateString(LG(),{weekday:'short'})}</span>`:''}</div><div class="sd stt">00:00</div><button class="add" onclick="sesS()">${I('play','g f')}ابدأ التمرين</button></div>`;
+ return `<div class="card ses ${run?'run':''}"><div class="sl"><span>${I('timer','g')}مدة التمرين</span><span>${run?'<i class="pulse"></i>شغّال':I('pause','g f')+'متوقف'}</span></div><div class="sd stt">${sfmt(sesMs())}</div><div class="two">${run?`<button onclick="sesP()">${I('pause','g f')}إيقاف مؤقت</button>`:`<button class="add" onclick="sesR()">${I('play','g f')}كمّل</button>`}<button class="stop" onclick="sesF()">${I('stop','g f')}إنهاء</button></div>${run?'':`<p class="nt" style="margin:0"><button onclick="sesX()">تجاهل الجلسة</button></p>`}</div>`;
 }
 const sesT=()=>document.querySelectorAll('.stt').forEach(e=>e.textContent=sfmt(sesMs()));
 setInterval(sesT,1000);document.addEventListener('visibilitychange',sesT);
 function vb(p){if(S.vb!==false&&navigator.vibrate)try{navigator.vibrate(p)}catch(e){}}
 function tm(m){
  clearInterval(T);let s=Math.round(m*60);const b=$('#tb'),sp=b.querySelector('span');b.hidden=false;vb(90);
- const u=()=>{sp.textContent='⏱ راحة '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};u();
- T=setInterval(()=>{s--;u();if(s<=0){clearInterval(T);sp.textContent='خلصت الراحة، يلا كمّل 💪';vb([350,120,350,120,600]);setTimeout(()=>b.hidden=true,5000)}},1000);
+ const u=()=>{sp.innerHTML=I('timer','g')+'راحة '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};u();
+ T=setInterval(()=>{s--;u();if(s<=0){clearInterval(T);sp.textContent='خلصت الراحة، يلا كمّل';vb([350,120,350,120,600]);setTimeout(()=>b.hidden=true,5000)}},1000);
 }
 /* ---------- السعرات ---------- */
 const tot=d=>(S.meals[d]||[]).reduce((a,m)=>({k:a.k+m.k,p:a.p+m.p,c:a.c+m.c,f:a.f+m.f}),{k:0,p:0,c:0,f:0});
 const dname=d=>d==today()?'اليوم':new Date(d+'T12:00').toLocaleDateString(LG(),{weekday:'long',day:'numeric',month:'long'});
 function sd(n){em=-1;const d=new Date(date+'T12:00');d.setDate(d.getDate()+n);date=iso(d);R()}
-function datebar(){return `<div class="dt"><button onclick="sd(-1)">${LANG=='en'?'‹':'›'}</button><b>${dname(date)}</b><button onclick="sd(1)">${LANG=='en'?'›':'‹'}</button></div>`}
+function datebar(){return `<div class="dt"><button onclick="sd(-1)">${I(LANG=='en'?'chl':'chr')}</button><b>${dname(date)}</b><button onclick="sd(1)">${I(LANG=='en'?'chr':'chl')}</button></div>`}
 const MT=()=>S.mt||{p:150,c:300,f:80};
 const pcn=(v,g)=>g>0?Math.round(v/g*100):0;
 let SG=[],SGC=[];
@@ -331,12 +346,12 @@ function sgTop(m,C,rem,remk){
 }
 function sga(i){const x=SG[i];if(!x)return;const y=window.scrollY;(S.meals[date]=S.meals[date]||[]).push({n:x.n,k:x.k,p:x.p,c:x.c,f:x.f,s:curSl()});save();R();window.scrollTo(0,y)}
 function sgall(){const y=window.scrollY;SGC.forEach(x=>(S.meals[date]=S.meals[date]||[]).push({n:x.n,k:x.k,p:x.p,c:x.c,f:x.f,s:curSl()}));save();R();window.scrollTo(0,y)}
-const SLOTS=[['b','🌅','فطور'],['l','☀️','غدا'],['d','🌙','عشا'],['s','🍎','سناك']];
+const SLOTS=[['b','sunrise','فطور'],['l','sun','غدا'],['d','moon','عشا'],['s','apple','سناك']];
 const slotNow=()=>{const h=new Date().getHours();return h>=5&&h<11?'b':h>=11&&h<16?'l':h>=16&&h<18?'s':h>=18&&h<23?'d':'s'};
 let msl=null;const curSl=()=>msl||slotNow();
-const slotTabs=()=>SLOTS.map(([k,e,l])=>`<button class="${curSl()==k?'on':''}" onclick="setSlot('${k}')">${e} ${l}</button>`).join('');
+const slotTabs=()=>SLOTS.map(([k,e,l])=>`<button class="${curSl()==k?'on':''}" onclick="setSlot('${k}')">${I(e,'g')}${l}</button>`).join('');
 function setSlot(k){msl=k;const e=$('#ssl');if(e)e.innerHTML=slotTabs()}
-function toast(m){const n=document.querySelectorAll('.toast').length,e=document.createElement('div');e.className='toast';e.style.top=`calc(${12+n*56}px + env(safe-area-inset-top))`;e.textContent=m;document.body.appendChild(e);setTimeout(()=>e.remove(),3500)}
+function toast(m,ic){const n=document.querySelectorAll('.toast').length,e=document.createElement('div');e.className='toast';e.style.top=`calc(${12+n*56}px + env(safe-area-inset-top))`;e.innerHTML=(ic?I(ic,'g'):'')+'<span></span>';e.lastChild.textContent=m;document.body.appendChild(e);setTimeout(()=>e.remove(),3500)}
 let sgt='m',sgo=true;
 function sgs(k){sgt=k;const e=$('#sg');if(e)e.innerHTML=GSUG()}
 const GSUG=()=>SUG(tot(date),MT());
@@ -344,10 +359,10 @@ const dots=m=>`<span class="dot" style="background:var(--p)"></span>${m.p} <span
 function SUG(t,T){
  SG=[];SGC=[];
  const G=S.goal,remk=G-t.k,rem={p:T.p-t.p,c:T.c-t.c,f:T.f-t.f};
- const card=x=>{SG.push(x);const i=x.n.lastIndexOf(' · '),nm=i>0?x.n.slice(0,i):x.n,qt=i>0?x.n.slice(i+3):'';return `<div class="sc"><b>${esc(nm)}</b><small>${esc(qt)}</small><span class="kc">${x.k} <small>سعرة</small></span><small>${dots(x)}</small><button onclick="sga(${SG.length-1})">+ أضف</button></div>`};
- const tabs=[['m','🍽 وجبة'],['p','🥩 بروتين'],['c','🍞 كارب'],['f','🥜 دهون']];
+ const card=x=>{SG.push(x);const i=x.n.lastIndexOf(' · '),nm=i>0?x.n.slice(0,i):x.n,qt=i>0?x.n.slice(i+3):'';return `<div class="sc"><b>${esc(nm)}</b><small>${esc(qt)}</small><span class="kc">${x.k} <small>سعرة</small></span><small>${dots(x)}</small><button onclick="sga(${SG.length-1})">${I('plus','g')}أضف</button></div>`};
+ const tabs=[['m',I('utensils','g'),'وجبة'],['p','<i class="dot" style="background:var(--p)"></i>','بروتين'],['c','<i class="dot" style="background:var(--c)"></i>','كارب'],['f','<i class="dot" style="background:var(--f)"></i>','دهون']];
  let body='';
- if(remk<30)body=`<p class="nt" style="text-align:center">🎉 وصلت لهدف السعرات اليوم.</p>`;
+ if(remk<30)body=`<p class="nt" style="text-align:center">${I('checkc','g')}وصلت لهدف السعرات اليوم.</p>`;
  else{
   const C=sgCands();
   if(sgt=='m'){
@@ -355,15 +370,15 @@ function SUG(t,T){
     const cb=sgCombo(C,T,t,remk);
     if(cb.length){
      SGC=cb;const sk=cb.reduce((a,x)=>a+x.k,0),sp=cb.reduce((a,x)=>a+x.p,0),sc=cb.reduce((a,x)=>a+x.c,0),sf=cb.reduce((a,x)=>a+x.f,0);
-     body=`<div class="hs">${cb.map(card).join('')}</div><p class="nt" style="margin:6px 0 8px">بعدها بتصير: سعرة ${pcn(t.k+sk,G)}% · بروتين ${pcn(t.p+sp,T.p)}% · كارب ${pcn(t.c+sc,T.c)}% · دهون ${pcn(t.f+sf,T.f)}%</p><button class="add" onclick="sgall()">+ أضف الكل (${sk} سعرة)</button>`;
+     body=`<div class="hs">${cb.map(card).join('')}</div><p class="nt" style="margin:6px 0 8px">بعدها بتصير: سعرة ${pcn(t.k+sk,G)}% · بروتين ${pcn(t.p+sp,T.p)}% · كارب ${pcn(t.c+sc,T.c)}% · دهون ${pcn(t.f+sf,T.f)}%</p><button class="add" onclick="sgall()">${I('plus','g')}أضف الكل (${sk} سعرة)</button>`;
     }else body=`<p class="nt">ما لقيت تركيبة مناسبة، جرب التبويبات التانية.</p>`;
    }else body=`<p class="nt">سجّل أول وجبة وبقترحلك وجبة بتكمّل يومك.</p>`;
   }else{
    const th={p:10,c:20,f:6}[sgt],L=rem[sgt]>=th?sgTop(sgt,C,rem,remk):[];
-   body=L.length?`<p class="nt" style="margin:8px 0 0">باقيلك ${Math.round(rem[sgt])}غ · اسحب لتشوف الباقي</p><div class="hs">${L.map(card).join('')}</div>`:`<p class="nt">ما في نقص كبير بهالعنصر 👌</p>`;
+   body=L.length?`<p class="nt" style="margin:8px 0 0">باقيلك ${Math.round(rem[sgt])}غ · اسحب لتشوف الباقي</p><div class="hs">${L.map(card).join('')}</div>`:`<p class="nt">${I('check','g')}ما في نقص كبير بهالعنصر</p>`;
   }
  }
- return `<details class="card" ${sgo?'open':''} ontoggle="sgo=this.open"><summary>💡 اقتراحات تكمّل يومك</summary><div class="cats" style="padding:10px 0 0">${tabs.map(([k,l])=>`<button class="${sgt==k?'on':''}" onclick="sgs('${k}')">${l}</button>`).join('')}</div>${body}</details>`;
+ return `<details class="card" ${sgo?'open':''} ontoggle="sgo=this.open"><summary><span>${I('bulb','g')}اقتراحات تكمّل يومك</span></summary><div class="cats" style="padding:10px 0 0">${tabs.map(([k,ic,l])=>`<button class="${sgt==k?'on':''}" onclick="sgs('${k}')">${ic}${l}</button>`).join('')}</div>${body}</details>`;
 }
 function RG(){
  const t=tot(date),T=MT(),G=S.goal,left=G-t.k,pk=pcn(t.k,G),ov=t.k>G*1.05;
@@ -373,17 +388,17 @@ function RG(){
 }
 function RM(){
  const L=S.meals[date]||[],t=tot(date);
-const slotSel=m=>`<select id="es" style="margin-top:8px">${SLOTS.map(([k,e,l])=>`<option value="${k}" ${m.s==k?'selected':''}>${e} ${l}</option>`).join('')}${SLOTS.some(x=>x[0]==m.s)?'':'<option value="" selected>بدون تصنيف</option>'}</select>`;
- const mrow=(m,i)=>em===i?`<div class="ed"><input id="en" value="${esc(m.n)}" style="text-align:start"><div class="g4"><input id="ek" type="number" inputmode="decimal" value="${m.k}"><input id="ep" type="number" inputmode="decimal" value="${m.p}"><input id="ec" type="number" inputmode="decimal" value="${m.c}"><input id="ef" type="number" inputmode="decimal" value="${m.f}"></div><p class="nt" style="margin:0">سعرات · بروتين · كارب · دهون</p>${slotSel(m)}<div class="two" style="margin-top:8px"><button class="add" onclick="es(${i})">حفظ</button><button onclick="em=-1;R()">إلغاء</button></div></div>`:`<div class="sr"><span><b>${esc(m.n)}</b><small>${m.k} سعرة · ${dots(m)}</small></span><span class="sa"><button onclick="em=${i};R()">✎</button><button onclick="dm(${i})">🗑</button></span></div>`;
- const IX=L.map((m,i)=>[m,i]),grp=(e,l,key)=>{const it=IX.filter(([m])=>key?m.s==key:!SLOTS.some(x=>x[0]==m.s)),k=it.reduce((a,[m])=>a+m.k,0);return it.length||key?`<div class="gh"><span>${e} ${l}</span>${k?`<small>${k} سعرة</small>`:''}${key&&it.length?`<button onclick="tps('${key}')">💾</button>`:''}${key?`<button onclick="openSheet('${key}')">＋</button>`:''}</div>`+it.map(([m,i])=>mrow(m,i)).join(''):''};
- const rows=grp('🍴','بدون تصنيف',null)+SLOTS.map(([k,e,l])=>grp(e,l,k)).join('');
+const slotSel=m=>`<select id="es" style="margin-top:8px">${SLOTS.map(([k,e,l])=>`<option value="${k}" ${m.s==k?'selected':''}>${l}</option>`).join('')}${SLOTS.some(x=>x[0]==m.s)?'':'<option value="" selected>بدون تصنيف</option>'}</select>`;
+ const mrow=(m,i)=>em===i?`<div class="ed"><input id="en" value="${esc(m.n)}" style="text-align:start"><div class="g4"><input id="ek" type="number" inputmode="decimal" value="${m.k}"><input id="ep" type="number" inputmode="decimal" value="${m.p}"><input id="ec" type="number" inputmode="decimal" value="${m.c}"><input id="ef" type="number" inputmode="decimal" value="${m.f}"></div><p class="nt" style="margin:0">سعرات · بروتين · كارب · دهون</p>${slotSel(m)}<div class="two" style="margin-top:8px"><button class="add" onclick="es(${i})">حفظ</button><button onclick="em=-1;R()">إلغاء</button></div></div>`:`<div class="sr"><span><b>${esc(m.n)}</b><small>${m.k} سعرة · ${dots(m)}</small></span><span class="sa"><button onclick="em=${i};R()">${I('edit')}</button><button onclick="dm(${i})">${I('trash')}</button></span></div>`;
+ const IX=L.map((m,i)=>[m,i]),grp=(e,l,key)=>{const it=IX.filter(([m])=>key?m.s==key:!SLOTS.some(x=>x[0]==m.s)),k=it.reduce((a,[m])=>a+m.k,0);return it.length||key?`<div class="gh"><span>${I(e,'g')}${l}</span>${k?`<small>${k} سعرة</small>`:''}${key&&it.length?`<button onclick="tps('${key}')">${I('save')}</button>`:''}${key?`<button onclick="openSheet('${key}')">${I('plus')}</button>`:''}</div>`+it.map(([m,i])=>mrow(m,i)).join(''):''};
+ const rows=grp('utensils','بدون تصنيف',null)+SLOTS.map(([k,e,l])=>grp(e,l,k)).join('');
  return `<div id="gc">${RG()}</div>
- <div class="card"><div class="mh"><h3>🍽 وجبات اليوم</h3><small style="color:var(--mu)">${L.length?t.k+' سعرة':''}</small></div>${rows}${L.length?'':cyb()}</div>
+ <div class="card"><div class="mh"><h3>${I('utensils','g')}وجبات اليوم</h3><small style="color:var(--mu)">${L.length?t.k+' سعرة':''}</small></div>${rows}${L.length?'':cyb()}</div>
  <div id="sg">${GSUG()}</div>
  ${WTR()}
- <details class="card" ${cop?'open':''} ontoggle="cop=this.open"><summary>🧮 الهدف والحاسبة</summary>
+ <details class="card" ${cop?'open':''} ontoggle="cop=this.open"><summary><span>${I('calc','g')}الهدف والحاسبة</span></summary>
  <div class="two" style="margin-top:10px"><label class="nt" style="margin:0">الهدف اليومي (سعرة)<input type="number" inputmode="numeric" value="${S.goal}" onchange="S.goal=+this.value||2500;S.auto=false;save();R()"></label><label class="nt" style="margin:0">الوزن (كغ)<input type="number" step="0.1" inputmode="decimal" value="${esc(cv('w',''))}" oninput="cc('w',this.value)"></label></div>
- <p class="nt" style="margin:8px 0 0">${S.auto?'🔄 الهدف بيتحدث تلقائي من الحاسبة.':'الهدف يدوي. فعّل التحديث التلقائي من نتيجة الحاسبة تحت.'}</p>
+ <p class="nt" style="margin:8px 0 0">${S.auto?I('refresh','g')+'الهدف بيتحدث تلقائي من الحاسبة.':'الهدف يدوي. فعّل التحديث التلقائي من نتيجة الحاسبة تحت.'}</p>
  <div class="two" style="margin-top:12px"><select onchange="cc('sx',this.value)">${opts([['m','ذكر'],['f','أنثى']],cv('sx','m'))}</select><input type="number" inputmode="numeric" placeholder="العمر (سنة)" value="${esc(cv('a',''))}" oninput="cc('a',this.value)"></div>
  <div class="two" style="margin-top:8px"><input type="number" inputmode="decimal" placeholder="الطول (سم)" value="${esc(cv('h',''))}" oninput="cc('h',this.value)"><select onchange="cc('act',+this.value)">${opts(ACT,cv('act',1.55))}</select></div>
  <select style="margin-top:8px" onchange="cc('g',+this.value)">${opts(GL,cv('g',0))}</select>
@@ -392,14 +407,14 @@ const slotSel=m=>`<select id="es" style="margin-top:8px">${SLOTS.map(([k,e,l])=>
 /* ---------- إضافة سريعة: الأخيرة / المفضلة / القوالب ---------- */
 let shm='q',shq='r',QL=[];
 function recents(){const o=[],seen={};for(const d of Object.keys(S.meals).sort().reverse()){const L=S.meals[d]||[];for(let i=L.length-1;i>=0;i--){const m=L[i];if(seen[m.n])continue;seen[m.n]=1;o.push({n:m.n,k:m.k,p:m.p,c:m.c,f:m.f});if(o.length>=15)return o}}return o}
-const modeTabs=()=>[['q','⚡ سريع'],['f','🔎 كل الأكل']].map(([k,l])=>`<button class="${shm==k?'on':''}" onclick="setMode('${k}')">${l}</button>`).join('');
+const modeTabs=()=>[['q','zap','سريع'],['f','search','كل الأكل']].map(([k,ic,l])=>`<button class="${shm==k?'on':''}" onclick="setMode('${k}')">${I(ic,'g')}${l}</button>`).join('');
 const qrow=(x,b,sub)=>`<div class="sr"><span><b>${esc(x.n)}</b><small>${sub||`${x.k} سعرة · ${dots(x)}`}</small></span><span class="sa">${b}</span></div>`;
 function qBody(){
  const fv=S.fav||[],tp=S.tpl||[];QL=[];
- let h=`<div class="cats" style="padding:0 0 6px">${[['r','🕘 الأخيرة'],['v','⭐ المفضلة'],['t','🍱 قوالب']].map(([k,l])=>`<button class="${shq==k?'on':''}" onclick="setQ('${k}')">${l}</button>`).join('')}</div>`;
- if(shq=='r'){QL=recents();h+=QL.length?`<div class="qb">${QL.map((x,i)=>qrow(x,`<button class="add" onclick="qadd(${i})">+</button><button onclick="qfav(${i})">${fv.some(f=>f.n==x.n)?'★':'☆'}</button>`)).join('')}</div>`:`<p class="nt">لما تسجل وجبات، آخر أكلاتك بتطلع هون.</p>`}
- else if(shq=='v'){QL=fv.slice();h+=QL.length?`<div class="qb">${QL.map((x,i)=>qrow(x,`<button class="add" onclick="qadd(${i})">+</button><button onclick="qfd(${i})">✕</button>`)).join('')}</div>`:`<p class="nt">ما في مفضلة بعد. اضغط ☆ على أي أكلة بالأخيرة.</p>`}
- else h+=tp.length?`<div class="qb">${tp.map((t,i)=>qrow({n:t.n},`<button class="add" onclick="tadd(${i})">+</button><button onclick="tdel(${i})">🗑</button>`,`${t.items.length>1?t.items.length+' أصناف':'صنف واحد'} · ${t.items.reduce((a,m)=>a+m.k,0)} سعرة`)).join('')}</div>`:`<p class="nt">ما في قوالب. اضغط 💾 جنب عنوان الوجبة لتحفظها.</p>`;
+ let h=`<div class="cats" style="padding:0 0 6px">${[['r','history','الأخيرة'],['v','star','المفضلة'],['t','layers','قوالب']].map(([k,ic,l])=>`<button class="${shq==k?'on':''}" onclick="setQ('${k}')">${I(ic,'g')}${l}</button>`).join('')}</div>`;
+ if(shq=='r'){QL=recents();h+=QL.length?`<div class="qb">${QL.map((x,i)=>qrow(x,`<button class="add" onclick="qadd(${i})">${I('plus')}</button><button onclick="qfav(${i})">${I('star',fv.some(f=>f.n==x.n)?'f':'')}</button>`)).join('')}</div>`:`<p class="nt">لما تسجل وجبات، آخر أكلاتك بتطلع هون.</p>`}
+ else if(shq=='v'){QL=fv.slice();h+=QL.length?`<div class="qb">${QL.map((x,i)=>qrow(x,`<button class="add" onclick="qadd(${i})">${I('plus')}</button><button onclick="qfd(${i})">${I('x')}</button>`)).join('')}</div>`:`<p class="nt">ما في مفضلة بعد. اضغط النجمة على أي أكلة بالأخيرة.</p>`}
+ else h+=tp.length?`<div class="qb">${tp.map((t,i)=>qrow({n:t.n},`<button class="add" onclick="tadd(${i})">${I('plus')}</button><button onclick="tdel(${i})">${I('trash')}</button>`,`${t.items.length>1?t.items.length+' أصناف':'صنف واحد'} · ${t.items.reduce((a,m)=>a+m.k,0)} سعرة`)).join('')}</div>`:`<p class="nt">ما في قوالب. اضغط أيقونة الحفظ جنب عنوان الوجبة لتحفظها.</p>`;
  return h+`<div id="fpn"></div>`;
 }
 const shBody=()=>shm=='f'?`<input id="fsq" placeholder="ابحث: دجاج، رز، بيض..." style="text-align:start" oninput="fs(this.value)"><div id="fct">${chips()}</div><div id="frs" class="fr"></div><div id="fpn"></div>`:qBody();
@@ -412,19 +427,19 @@ function qfav(i){const x=QL[i];if(!x)return;S.fav=S.fav||[];const j=S.fav.findIn
 function qfd(i){const x=QL[i];if(!x)return;S.fav=(S.fav||[]).filter(f=>f.n!=x.n);save();shRe()}
 function tadd(i){const t=(S.tpl||[])[i];if(!t)return;t.items.forEach(addM);save();R();shOk(t.n)}
 function tdel(i){if(!confirm('تحذف هالقالب؟'))return;S.tpl.splice(i,1);save();shRe()}
-function tps(key){const L=(S.meals[date]||[]).filter(m=>m.s==key);if(!L.length)return;const sl=SLOTS.find(x=>x[0]==key),n=prompt('اسم القالب',sl?sl[2]:'');if(!n)return;(S.tpl=S.tpl||[]).push({n:n.trim(),items:L.map(m=>({n:m.n,k:m.k,p:m.p,c:m.c,f:m.f}))});save();toast('✓ انحفظ القالب: '+n.trim())}
+function tps(key){const L=(S.meals[date]||[]).filter(m=>m.s==key);if(!L.length)return;const sl=SLOTS.find(x=>x[0]==key),n=prompt('اسم القالب',sl?sl[2]:'');if(!n)return;(S.tpl=S.tpl||[]).push({n:n.trim(),items:L.map(m=>({n:m.n,k:m.k,p:m.p,c:m.c,f:m.f}))});save();toast('انحفظ القالب: '+n.trim(),'check')}
 /* ---------- الماء ---------- */
 function wset(n){S.wt=S.wt||{};S.wt[date]=Math.max(0,n);save();R()}
-function WTR(){const n=(S.wt||{})[date]||0,g=Math.max(8,n);return `<div class="card"><div class="mh"><h3>💧 الماء</h3><span class="sa"><button onclick="wset(${n-1})">−</button><b style="align-self:center;min-width:64px;text-align:center">${n*.25} لتر</b><button onclick="wset(${n+1})">+</button></span></div><div class="cups">${Array.from({length:g},(_,i)=>`<button class="cup ${i<n?'on':''}" onclick="wset(${i<n&&i==n-1?i:i+1})"></button>`).join('')}</div><p class="nt" style="margin:8px 0 0">الكاسة = 250 مل · الهدف 2 لتر</p></div>`}
+function WTR(){const n=(S.wt||{})[date]||0,g=Math.max(8,n);return `<div class="card"><div class="mh"><h3>${I('drop','g')}الماء</h3><span class="sa"><button onclick="wset(${n-1})">${I('minus')}</button><b style="align-self:center;min-width:64px;text-align:center">${n*.25} لتر</b><button onclick="wset(${n+1})">${I('plus')}</button></span></div><div class="cups">${Array.from({length:g},(_,i)=>`<button class="cup ${i<n?'on':''}" onclick="wset(${i<n&&i==n-1?i:i+1})"></button>`).join('')}</div><p class="nt" style="margin:8px 0 0">الكاسة = 250 مل · الهدف 2 لتر</p></div>`}
 /* ---------- نافذة إضافة أكل ---------- */
-const shHTML=()=>`<div class="sh-bg" onclick="closeSheet()"></div><div class="sh-box"><div class="sh-h"><h3>➕ أضف أكل</h3><button onclick="closeSheet()">✕</button></div>
+const shHTML=()=>`<div class="sh-bg" onclick="closeSheet()"></div><div class="sh-box"><div class="sh-h"><h3>${I('plus','g')}أضف أكل</h3><button onclick="closeSheet()">${I('x')}</button></div>
  <div class="cats" id="ssl" style="padding:0 0 10px">${slotTabs()}</div>
  <div class="cats" id="smd" style="padding:0 0 10px">${modeTabs()}</div><div id="shb">${shBody()}</div>
- <div class="two" style="margin-top:8px"><button onclick="bs()">▥ باركود</button><button onclick="const e=$('#mdt');e.hidden=!e.hidden">✍️ يدوي</button></div><div id="cam"></div>
- <div id="mdt" hidden style="margin-top:10px"><input id="mn" placeholder="اسم الوجبة" style="text-align:start"><div class="g4"><input id="mk" type="number" inputmode="decimal" placeholder="سعرات"><input id="mp" type="number" inputmode="decimal" placeholder="بروتين"><input id="mc" type="number" inputmode="decimal" placeholder="كارب"><input id="mf" type="number" inputmode="decimal" placeholder="دهون"></div><label class="nt"><input id="ms" type="checkbox" style="width:20px;height:20px;vertical-align:middle"> احفظها بقائمة الأكل (كحصة)</label><select id="mcat" style="margin-top:8px">${catOpts('my')}</select><button class="add" onclick="am()" style="margin-top:10px">+ أضف</button><p class="nt">اترك السعرات فاضية وبنحسبها من الماكروز.</p></div></div>`;
+ <div class="two" style="margin-top:8px"><button onclick="bs()">${I('barcode','g')}باركود</button><button onclick="const e=$('#mdt');e.hidden=!e.hidden">${I('edit','g')}يدوي</button></div><div id="cam"></div>
+ <div id="mdt" hidden style="margin-top:10px"><input id="mn" placeholder="اسم الوجبة" style="text-align:start"><div class="g4"><input id="mk" type="number" inputmode="decimal" placeholder="سعرات"><input id="mp" type="number" inputmode="decimal" placeholder="بروتين"><input id="mc" type="number" inputmode="decimal" placeholder="كارب"><input id="mf" type="number" inputmode="decimal" placeholder="دهون"></div><label class="nt"><input id="ms" type="checkbox" style="width:20px;height:20px;vertical-align:middle"> احفظها بقائمة الأكل (كحصة)</label><select id="mcat" style="margin-top:8px">${catOpts('my')}</select><button class="add" onclick="am()" style="margin-top:10px">${I('plus','g')}أضف</button><p class="nt">اترك السعرات فاضية وبنحسبها من الماكروز.</p></div></div>`;
 function openSheet(k){if(k)msl=k;shm=(recents().length||(S.fav||[]).length||(S.tpl||[]).length)?'q':'f';const e=$('#sheet');e.innerHTML=shHTML();e.hidden=false;document.body.style.overflow='hidden';if(shm=='f')fs('')}
 function closeSheet(){msl=null;bsx();const e=$('#sheet');if(!e)return;e.innerHTML='';e.hidden=true;document.body.style.overflow=''}
-const shOk=n=>{const e=$('#fpn');if(e){const sl=SLOTS.find(x=>x[0]==curSl());e.innerHTML=`<p class="nt ok">✓ ${esc(n)} · ${sl[1]} ${sl[2]}</p>`}};
+const shOk=n=>{const e=$('#fpn');if(e){const sl=SLOTS.find(x=>x[0]==curSl());e.innerHTML=`<p class="nt ok">${I('check','g')}${esc(n)} · ${I(sl[1],'g')}${sl[2]}</p>`}};
 function am(){
  const v=id=>+$('#'+id).value||0,n=$('#mn').value.trim()||'وجبة';
  const p=v('mp'),c=v('mc'),f=v('mf'),k=v('mk')||Math.round(p*4+c*4+f*9);
@@ -632,13 +647,13 @@ const FOODS=[
 ['هريسة',330,5,55,10,'قطعة',80,'sweet'],
 ['حلاوة طحينية',515,12,50,30,'قطعة',30,'sweet'],
 ['شوكولاتة داكنة (70%)',598,8,46,43,'قطعة',10,'sweet']];
-const CATS=[['meat','🥩','لحوم وبروتين'],['cheese','🧀','أجبان'],['dairy','🥛','حليب وألبان'],['sand','🌯','شاورما وساندويتشات'],['east','🍲','أكل شرقي'],['west','🍝','أكل غربي'],['carb','🍞','نشويات ومخبوزات'],['fruit','🍎','فواكه'],['veg','🥬','خضار وسلطات'],['nuts','🥜','مكسرات وبذور'],['sauce','🍯','زيوت وصلصات وسكر'],['sweet','🍫','حلويات وسناك'],['drink','🥤','مشروبات'],['my','⭐','أكلاتي']];
+const CATS=[['meat','','لحوم وبروتين'],['cheese','','أجبان'],['dairy','','حليب وألبان'],['sand','','شاورما وساندويتشات'],['east','','أكل شرقي'],['west','','أكل غربي'],['carb','','نشويات ومخبوزات'],['fruit','','فواكه'],['veg','','خضار وسلطات'],['nuts','','مكسرات وبذور'],['sauce','','زيوت وصلصات وسكر'],['sweet','','حلويات وسناك'],['drink','','مشروبات'],['my','','أكلاتي']];
 let fcat='all';
 const fcOf=f=>f[7]||'my';
-const catOpts=cur=>CATS.map(([k,e,l])=>`<option value="${k}" ${k==cur?'selected':''}>${e} ${l}</option>`).join('');
+const catOpts=cur=>CATS.map(([k,e,l])=>`<option value="${k}" ${k==cur?'selected':''}>${l}</option>`).join('');
 function chips(){
  const A=allF(),cn=k=>A.filter(f=>fcOf(f)==k).length;
- return `<select onchange="fc(this.value)" style="margin-top:10px"><option value="all" ${fcat=='all'?'selected':''}>🍽 كل التصنيفات (${A.length})</option>`+CATS.filter(([k])=>cn(k)).map(([k,e,l])=>`<option value="${k}" ${fcat==k?'selected':''}>${e} ${l} (${cn(k)})</option>`).join('')+`</select>`;
+ return `<select onchange="fc(this.value)" style="margin-top:10px"><option value="all" ${fcat=='all'?'selected':''}>كل التصنيفات (${A.length})</option>`+CATS.filter(([k])=>cn(k)).map(([k,e,l])=>`<option value="${k}" ${fcat==k?'selected':''}>${l} (${cn(k)})</option>`).join('')+`</select>`;
 }
 function shR(){if(!$('#fsq'))return;$('#fct').innerHTML=chips();fs($('#fsq').value)}
 function fc(k){fcat=k;shR()}
@@ -652,13 +667,13 @@ let fsel=null;
 function fs(q){
  if(!$('#frs'))return;q=(q||'').trim();const A=allF(),nq=nz(q);
  const m=A.filter(f=>(fcat=='all'||fcOf(f)==fcat)&&nz(f[0]).includes(nq));
- const row=f=>{const u=f[5]&&f[6]>0,k=(u?f[6]:100)/100;return `<button class="fb" onclick="fp(${A.indexOf(f)})"><span style="min-width:0"><b>${esc(f[0])}</b><small style="display:block;white-space:normal">${u?'1 '+esc(f[5])+' · ':'100غ · '}${Math.round(f[1]*k)} سعرة · ${dots({p:r1(f[2]*k),c:r1(f[3]*k),f:r1(f[4]*k)})}</small></span><i style="color:var(--mu);font-style:normal">${LANG=='en'?'›':'‹'}</i></button>`};
+ const row=f=>{const u=f[5]&&f[6]>0,k=(u?f[6]:100)/100;return `<button class="fb" onclick="fp(${A.indexOf(f)})"><span style="min-width:0"><b>${esc(f[0])}</b><small style="display:block;white-space:normal">${u?'1 '+esc(f[5])+' · ':'100غ · '}${Math.round(f[1]*k)} سعرة · ${dots({p:r1(f[2]*k),c:r1(f[3]*k),f:r1(f[4]*k)})}</small></span><i style="color:var(--mu);font-style:normal;display:flex">${I(LANG=='en'?'chr':'chl')}</i></button>`};
  $('#frs').innerHTML=m.map(row).join('')||'<p class="nt">ما لقينا الأكلة. أضفها يدوي تحت.</p>';
 }
 function fp(i){fpo(allF()[i])}
 function fpo(f){
  fsel=f;
- $('#fpn').innerHTML=`<div class="fsel"><b>${esc(f[0])}</b><div class="two" style="margin:8px 0"><input id="fq" type="number" inputmode="decimal" step="any" value="${f[5]?1:100}" oninput="pv()"><select id="fu" onchange="$('#fq').value=this.value=='u'?1:100;pv()">${f[5]?`<option value="u">${esc(f[5])} (~${f[6]}غ)</option>`:''}<option value="g">غرام</option></select></div><div id="pvw" class="nt"></div><button class="add" onclick="fa()" style="margin-top:10px">+ أضف للوجبات</button>${f.src=='x'?`<button onclick="sf()" style="width:100%;margin-top:8px">💾 احفظها بقائمة الأكل</button>`:`<div class="two" style="margin-top:8px"><button onclick="fe()">✎ عدّل الأكلة</button><button onclick="fdl()">🗑 احذفها من القائمة</button></div>`}</div>`;
+ $('#fpn').innerHTML=`<div class="fsel"><b>${esc(f[0])}</b><div class="two" style="margin:8px 0"><input id="fq" type="number" inputmode="decimal" step="any" value="${f[5]?1:100}" oninput="pv()"><select id="fu" onchange="$('#fq').value=this.value=='u'?1:100;pv()">${f[5]?`<option value="u">${esc(f[5])} (~${f[6]}غ)</option>`:''}<option value="g">غرام</option></select></div><div id="pvw" class="nt"></div><button class="add" onclick="fa()" style="margin-top:10px">${I('plus','g')}أضف للوجبات</button>${f.src=='x'?`<button onclick="sf()" style="width:100%;margin-top:8px">${I('save','g')}احفظها بقائمة الأكل</button>`:`<div class="two" style="margin-top:8px"><button onclick="fe()">${I('edit','g')}عدّل الأكلة</button><button onclick="fdl()">${I('trash','g')}احذفها من القائمة</button></div>`}</div>`;
  pv();$('#fpn').scrollIntoView({block:'nearest'});
 }
 function fe(){
@@ -1210,23 +1225,23 @@ RDL هامسترينغ=RDL (hamstrings)
 ضمن الهدف=On target
 أيام مسجلة=Days logged
 حجم التمرين الأسبوعي=Weekly training volume
-علّم مجموعاتك ✓ مع الوزن والعدات لتشوف الحجم الأسبوعي=Check off sets with weight and reps to see weekly volume
-الحجم = الوزن × العدات لكل المجموعات اللي علّمتها ✓ (كغ)=Volume = weight × reps for every set you checked off ✓ (kg)
+علّم مجموعاتك بعلامة الصح مع الوزن والعدات لتشوف الحجم الأسبوعي=Check off sets with weight and reps to see weekly volume
+الحجم = الوزن × العدات لكل المجموعات اللي علّمتها (كغ)=Volume = weight × reps for every set you checked off (kg)
 تقويم التمارين=Workout calendar
 تمرنت=You trained
 يوم بآخر 5 أسابيع=days in the last 5 weeks
 كل مربع يوم، وكل ما كان أغمق كل ما كانت المجموعات أكتر=Each square is a day, darker means more sets
 بيتسجل من هلأ ورايح=Tracking starts from now
 أرقامك القياسية=Your personal records
-علّم مجموعاتك ✓ لتظهر أرقامك هون=Check off sets ✓ and your records will show up here
+علّم مجموعاتك بعلامة الصح لتظهر أرقامك هون=Check off sets and your records will show up here
 سريع=Quick
 كل الأكل=All foods
 الأخيرة=Recent
 المفضلة=Favorites
 قوالب=Templates
 لما تسجل وجبات، آخر أكلاتك بتطلع هون=Once you log meals, your recent foods will show up here
-ما في مفضلة بعد. اضغط ☆ على أي أكلة بالأخيرة=No favorites yet. Tap ☆ on any recent food
-ما في قوالب. اضغط 💾 جنب عنوان الوجبة لتحفظها=No templates yet. Tap 💾 next to a meal title to save it
+ما في مفضلة بعد. اضغط النجمة على أي أكلة بالأخيرة=No favorites yet. Tap the star on any recent food
+ما في قوالب. اضغط أيقونة الحفظ جنب عنوان الوجبة لتحفظها=No templates yet. Tap the save icon next to a meal title to save it
 أصناف=items
 صنف واحد=1 item
 اسم القالب=Template name
@@ -1297,7 +1312,7 @@ try{
 const IC={w:'<path d="M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11"/>',m:'<path d="M12 3c.5 3 4.5 5 4.5 9.5a4.5 4.5 0 0 1-9 0c0-2 1-3.3 2-4.2.1 1.8 1 2.7 2 2.7-.3-2.6-.2-5 .5-8z"/>',c:'<path d="M5 20V11M12 20V4M19 20v-6"/>',s:'<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>'};
 function TOP(){
  const d=new Date().toLocaleDateString(LG(),{weekday:'long',day:'numeric',month:'long'});
- return `<div class="brand"><span class="logo">💪</span><div><b>برنامجي التدريبي</b><small>${d}</small></div></div>${S.ses&&tab!='w'?`<button class="sp" onclick="go('w')">${S.ses.run?'<i class="pulse"></i>':'⏸ '}<span class="stt">${sfmt(sesMs())}</span></button>`:''}<div class="seg"><button class="${LANG!='en'?'on':''}" onclick="sl('ar')">ع</button><button class="${LANG=='en'?'on':''}" onclick="sl('en')">EN</button></div>`;
+ return `<div class="brand"><span class="logo">${I('dumbbell')}</span><div><b>برنامجي التدريبي</b><small>${d}</small></div></div>${S.ses&&tab!='w'?`<button class="sp" onclick="go('w')">${S.ses.run?'<i class="pulse"></i>':I('pause','g f')}<span class="stt">${sfmt(sesMs())}</span></button>`:''}<div class="seg"><button class="${LANG!='en'?'on':''}" onclick="sl('ar')">ع</button><button class="${LANG=='en'?'on':''}" onclick="sl('en')">EN</button></div>`;
 }
 /* ---------- باركود ---------- */
 let ST=null,BT=null,RD=null;
@@ -1327,7 +1342,7 @@ async function bs(){
 }
 async function bl(code){
  code=String(code||'').replace(/\D/g,'');if(code.length<6)return;
- bsx();const c=$('#cam');c.innerHTML='<p class="nt">⏳ '+code+'</p>';
+ bsx();const c=$('#cam');c.innerHTML='<p class="nt">'+I('timer','g')+code+'</p>';
  try{
   const r=await fetch('https://world.openfoodfacts.org/api/v2/product/'+code+'.json?fields=product_name,product_name_ar,brands,nutriments,serving_quantity');
   const d=await r.json(),p=d.product;
@@ -1376,27 +1391,27 @@ function sg(t,p,c,f){S.goal=t;S.mt={p,c,f};S.auto=true;save();R()}
 /* ---------- الإعدادات والنسخ ---------- */
 const hd=x=>Object.keys(x.meals||{}).length>0||x.days.some(d=>d.e.some(e=>Object.values(e.wk||{}).some(o=>(o.w||[]).some(Boolean))));
 function hasD(){return hd(S)}
-function rsn(){S=mig(JSON.parse(JSON.stringify(SNAP)));SNAP=null;save();R();alert('رجّعت البيانات من النسخة التلقائية ✅')}
+function rsn(){S=mig(JSON.parse(JSON.stringify(SNAP)));SNAP=null;save();R();alert('رجّعت البيانات من النسخة التلقائية')}
 function uw(){try{localStorage.setItem(K+'-undo',JSON.stringify(S))}catch(e){}}
 function un(){try{const d=JSON.parse(localStorage.getItem(K+'-undo'));if(d&&d.days&&d.meals){S=mig(d);save();localStorage.removeItem(K+'-undo');R();alert('رجّعت البيانات')}}catch(e){}}
 const cs=()=>S.days.reduce((a,d)=>a+d.e.reduce((b,x)=>b+Object.values(x.wk||{}).reduce((c,o)=>c+(o.w||[]).filter(Boolean).length,0),0),0);
-function stW(){let bad=location.protocol!='https:';try{bad=bad||window.top!==window}catch(e){bad=true}return bad?'<p class="nt" style="color:#d33">⚠️ الصفحة مفتوحة من مكان مؤقت (ملف أو معاينة داخل تطبيق)، فالبيانات هون ممكن ما تنحفظ. افتح رابط موقعك على GitHub Pages من كروم.</p>':''}
+function stW(){let bad=location.protocol!='https:';try{bad=bad||window.top!==window}catch(e){bad=true}return bad?'<p class="nt" style="color:#d33">'+I('alert','g')+'الصفحة مفتوحة من مكان مؤقت (ملف أو معاينة داخل تطبيق)، فالبيانات هون ممكن ما تنحفظ. افتح رابط موقعك على GitHub Pages من كروم.</p>':''}
 async function pst(){const e=$('#pst');if(!e)return;try{const p=navigator.storage&&navigator.storage.persisted?await navigator.storage.persisted():null;e.textContent=p===null?'غير مدعوم':p?'مفعّل':'مش مفعّل (المتصفح ممكن يمسح بياناتك إذا الجهاز ضاق)'}catch(x){e.textContent='—'}}
-async function pr(){try{const g=navigator.storage&&navigator.storage.persist?await navigator.storage.persist():false;alert(g?'تم تفعيل التخزين الدائم ✅':'المتصفح ما وافق. ثبّت التطبيق على الشاشة الرئيسية وجرب تاني.')}catch(e){}pst()}
-function bn(){if(SNAP&&!hasD()&&hd(SNAP))return `<div class="card dt" style="margin:0 0 10px;padding:10px 12px;background:var(--tint)"><span class="nt" style="margin:0;color:var(--tx)">🔄 بياناتك فاضية، بس في نسخة تلقائية من ${esc(SNAPD)}.</span><button onclick="rsn()">استرجعها</button></div>`;
- return tab!='s'&&hasD()&&(!S.bk||Date.now()-S.bk>6048e5)?`<div class="card dt" style="margin:0 0 10px;padding:10px 12px;background:var(--tint)"><span class="nt" style="margin:0;color:var(--tx)">⚠️ ما خدت نسخة احتياطية من أسبوع. بياناتك محفوظة عالمتصفح بس.</span><button onclick="go('s')">خد نسخة</button></div>`:''}
+async function pr(){try{const g=navigator.storage&&navigator.storage.persist?await navigator.storage.persist():false;alert(g?'تم تفعيل التخزين الدائم':'المتصفح ما وافق. ثبّت التطبيق على الشاشة الرئيسية وجرب تاني.')}catch(e){}pst()}
+function bn(){if(SNAP&&!hasD()&&hd(SNAP))return `<div class="card dt" style="margin:0 0 10px;padding:10px 12px;background:var(--tint)"><span class="nt" style="margin:0;color:var(--tx)">${I('refresh','g')}بياناتك فاضية، بس في نسخة تلقائية من ${esc(SNAPD)}.</span><button onclick="rsn()">استرجعها</button></div>`;
+ return tab!='s'&&hasD()&&(!S.bk||Date.now()-S.bk>6048e5)?`<div class="card dt" style="margin:0 0 10px;padding:10px 12px;background:var(--tint)"><span class="nt" style="margin:0;color:var(--tx)">${I('alert','g')}ما خدت نسخة احتياطية من أسبوع. بياناتك محفوظة عالمتصفح بس.</span><button onclick="go('s')">خد نسخة</button></div>`:''}
 function RS(){
  const b=S.bk?new Date(S.bk).toLocaleDateString(LG(),{weekday:'long',day:'numeric',month:'long'}):'ما أخدت ولا وحدة';
  return `<div class="card"><h3>النسخة الاحتياطية</h3><p class="nt">آخر نسخة: ${b}</p>
- <button class="add" onclick="shW()" style="margin-top:10px">📤 شارك على واتساب</button>
- <div class="two" style="margin-top:8px"><button onclick="ex()">⬇️ تحميل نسخة</button><button onclick="$('#imf').click()">📂 استرجاع نسخة</button></div>
+ <button class="add" onclick="shW()" style="margin-top:10px">${I('share','g')}شارك على واتساب</button>
+ <div class="two" style="margin-top:8px"><button onclick="ex()">${I('download','g')}تحميل نسخة</button><button onclick="$('#imf').click()">${I('folder','g')}استرجاع نسخة</button></div>
  <input id="imf" type="file" accept=".txt,.json,text/plain,application/json" hidden onchange="im(this.files[0]);this.value=''">
  <button onclick="$('#imf2').click()" style="background:none;padding:6px 0;font-size:13px;color:var(--mu)">ما لقيت ملفك؟ اختر من كل الملفات</button><input id="imf2" type="file" hidden onchange="im(this.files[0]);this.value=''">
  <p id="bs" class="nt" style="color:var(--tx)"></p>
  <p class="nt">ابعت النسخة لنفسك على واتساب. لما تحتاجها، احفظ الملف وبعدين اضغط "استرجاع نسخة" واختاره.</p></div>
  <div class="card"><h3>إعدادات</h3><label class="nt" style="display:flex;gap:10px;align-items:center"><input type="checkbox" style="width:24px;height:24px" ${S.at!==false?'checked':''} onchange="S.at=this.checked;save()"> شغّل مؤقت الراحة تلقائياً لما أعلّم مجموعة</label>
- <label class="nt" style="display:flex;gap:10px;align-items:center"><input type="checkbox" style="width:24px;height:24px" ${S.vb!==false?'checked':''} onchange="S.vb=this.checked;save();if(this.checked)vb(120)"> اهتزاز عند بدء وانتهاء مؤقت الراحة</label><p class="nt" style="direction:ltr;text-align:start;margin:10px 0 0">v2026.11.11-j</p></div>
- <div class="card"><h3>حالة التخزين</h3><p class="nt" style="direction:ltr;text-align:start;word-break:break-all">${esc(location.origin+location.pathname)}</p>${stW()}<p class="nt">💡 ضيف التطبيق للشاشة الرئيسية. Safari بيمسح بيانات المواقع اللي ما استخدمتها 7 أيام، وتخزين Safari منفصل عن تخزين التطبيق اللي على الشاشة الرئيسية، فإذا بدك تنقل بياناتك استعمل النسخة الاحتياطية.</p><p class="nt">تخزين دائم: <b id="pst">…</b></p><p class="nt">آخر حفظ: ${S.sv?new Date(S.sv).toLocaleString(LG()):'—'}<br>${Object.keys(S.meals).length} يوم فيه وجبات · ${cs()} مجموعة بأوزان</p><button onclick="pr()" style="width:100%">اطلب تخزين دائم</button>${(()=>{try{return localStorage.getItem(K+'-undo')?'<button onclick="un()" style="width:100%;margin-top:8px">↩️ تراجع عن آخر مسح أو استرجاع</button>':''}catch(e){return ''}})()}</div>
+ <label class="nt" style="display:flex;gap:10px;align-items:center"><input type="checkbox" style="width:24px;height:24px" ${S.vb!==false?'checked':''} onchange="S.vb=this.checked;save();if(this.checked)vb(120)"> اهتزاز عند بدء وانتهاء مؤقت الراحة</label><p class="nt" style="direction:ltr;text-align:start;margin:10px 0 0">v2026.11.11-k</p></div>
+ <div class="card"><h3>حالة التخزين</h3><p class="nt" style="direction:ltr;text-align:start;word-break:break-all">${esc(location.origin+location.pathname)}</p>${stW()}<p class="nt">${I('bulb','g')}ضيف التطبيق للشاشة الرئيسية. Safari بيمسح بيانات المواقع اللي ما استخدمتها 7 أيام، وتخزين Safari منفصل عن تخزين التطبيق اللي على الشاشة الرئيسية، فإذا بدك تنقل بياناتك استعمل النسخة الاحتياطية.</p><p class="nt">تخزين دائم: <b id="pst">…</b></p><p class="nt">آخر حفظ: ${S.sv?new Date(S.sv).toLocaleString(LG()):'—'}<br>${Object.keys(S.meals).length} يوم فيه وجبات · ${cs()} مجموعة بأوزان</p><button onclick="pr()" style="width:100%">اطلب تخزين دائم</button>${(()=>{try{return localStorage.getItem(K+'-undo')?'<button onclick="un()" style="width:100%;margin-top:8px">'+I('undo','g')+'تراجع عن آخر مسح أو استرجاع</button>':''}catch(e){return ''}})()}</div>
  <div class="card"><h3>حتى ما تضيع بياناتك</h3><p class="nt">آيفون: افتح الموقع بسفاري ← مشاركة ← "إضافة إلى الشاشة الرئيسية". بدونها آيفون ممكن يمسح بيانات المواقع إذا ما فتحتها أسبوع.<br>أندرويد: كروم ← ⋮ ← "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية".<br>لا تفتح الموقع بوضع التصفح الخفي، ولا تمسح بيانات الموقع من إعدادات المتصفح.</p></div>
  <div class="card"><button onclick="rf()" style="width:100%">رجّع قائمة الأكل الأصلية</button></div>
  <div class="card"><button onclick="wipe()" style="width:100%;color:#d33">مسح كل البيانات</button></div>`;
@@ -1410,43 +1425,43 @@ function xInfo(x,i,o){
  const all=dsets(x);if(!all.length)return '';
  const tr=x.tr||12,ks=[...new Set(all.map(a=>a.k))].sort((a,b)=>a-b),pk=ks.filter(k=>k<S.week).pop();
  const bw=Math.max(...all.map(a=>a.w)),be=Math.max(...all.map(a=>e1(a.w,a.q)));
- let h=`<div class="xi">${pk?`<span>🕘 أ${pk}: ${all.filter(a=>a.k==pk).map(a=>`${a.w}×${a.q||'?'}`).join(' · ')}</span>`:''}<span>🏆 ${bw} كغ · 1RM≈${Math.round(be)}</span></div>`;
+ let h=`<div class="xi">${pk?`<span>${I('history','g')}أ${pk}: ${all.filter(a=>a.k==pk).map(a=>`${a.w}×${a.q||'?'}`).join(' · ')}</span>`:''}<span>${I('trophy','g')}${bw} كغ · 1RM≈${Math.round(be)}</span></div>`;
  if(pk&&!o.d.some(Boolean)){
   const r=x.wk[pk],ps=all.filter(a=>a.k==pk),wm=Math.max(...ps.map(a=>a.w));
   if(r.d.length&&r.d.every(Boolean)&&Math.max(...o.w.map(nn))<=wm){
-   if(Math.min(...ps.map(a=>a.q))>=tr){const nw=Math.round((wm+(wm<20?1:2.5))*10)/10;h+=`<div class="sug"><span>💡 جرّب ${nw} كغ</span><button class="add" onclick="xap(${i},${nw})">طبّق</button></div>`}
-   else h+=`<div class="sug"><span>💡 ثبّت ${wm} كغ وحاول توصل ${tr} عدة بكل مجموعة</span></div>`;
+   if(Math.min(...ps.map(a=>a.q))>=tr){const nw=Math.round((wm+(wm<20?1:2.5))*10)/10;h+=`<div class="sug"><span>${I('bulb','g')}جرّب ${nw} كغ</span><button class="add" onclick="xap(${i},${nw})">طبّق</button></div>`}
+   else h+=`<div class="sug"><span>${I('bulb','g')}ثبّت ${wm} كغ وحاول توصل ${tr} عدة بكل مجموعة</span></div>`;
   }
  }
  return h;
 }
-function xDet(x,i){return `<details class="xn"><summary>📝 ملاحظات وهدف العدات${x.note?' •':''}</summary><div class="two"><label class="nt" style="margin:0">هدف العدات<input type="number" inputmode="numeric" value="${x.tr||12}" onchange="S.days[di].e[${i}].tr=+this.value||12;save();R()"></label><label class="nt" style="margin:0">ملاحظة<input value="${esc(x.note||'')}" placeholder="ضبط الجهاز، إحساس..." style="text-align:start" onchange="S.days[di].e[${i}].note=this.value;save()"></label></div></details>`}
+function xDet(x,i){return `<details class="xn"><summary><span>${I('note','g')}ملاحظات وهدف العدات${x.note?' •':''}</span></summary><div class="two"><label class="nt" style="margin:0">هدف العدات<input type="number" inputmode="numeric" value="${x.tr||12}" onchange="S.days[di].e[${i}].tr=+this.value||12;save();R()"></label><label class="nt" style="margin:0">ملاحظة<input value="${esc(x.note||'')}" placeholder="ضبط الجهاز، إحساس..." style="text-align:start" onchange="S.days[di].e[${i}].note=this.value;save()"></label></div></details>`}
 function xap(i,w){const o=E(i);o.w=o.w.map(()=>String(w));save();R()}
 function volByWeek(){const V={};S.days.forEach(d=>d.e.forEach(x=>Object.keys(x.wk||{}).forEach(k=>{const r=x.wk[k];(r.w||[]).forEach((w,j)=>{if(r.d&&r.d[j])V[k]=(V[k]||0)+nn(w)*nn((r.q||[])[j])})})));return V}
 function RWK(TT){
  const G=S.goal,P=MT().p,tr=TT.filter(t=>t.k>0),n=tr.length,ak=n?Math.round(tr.reduce((a,t)=>a+t.k,0)/n):0,ap=n?Math.round(tr.reduce((a,t)=>a+t.p,0)/n):0,ok=tr.filter(t=>Math.abs(t.k-G)<=G*.1).length;
  const tl=(l,v,sb)=>`<div class="kp"><small>${l}</small><b>${v}</b><small>${sb}</small></div>`;
- return `<div class="card"><h3>📊 ملخص آخر 7 أيام</h3><div class="kpg">${tl('متوسط السعرات',n?ak:'—',n?pcn(ak,G)+'%':'')}${tl('متوسط البروتين',n?ap+'غ':'—',n?pcn(ap,P)+'%':'')}${tl('ضمن الهدف',n?ok+'/'+n:'—','±10%')}${tl('أيام مسجلة',n+'/7','')}</div></div>`;
+ return `<div class="card"><h3>${I('chart','g')}ملخص آخر 7 أيام</h3><div class="kpg">${tl('متوسط السعرات',n?ak:'—',n?pcn(ak,G)+'%':'')}${tl('متوسط البروتين',n?ap+'غ':'—',n?pcn(ap,P)+'%':'')}${tl('ضمن الهدف',n?ok+'/'+n:'—','±10%')}${tl('أيام مسجلة',n+'/7','')}</div></div>`;
 }
 function RVOL(){
  const V=volByWeek(),wk=S.week,ks=[];for(let k=Math.max(1,wk-7);k<=wk;k++)ks.push(k);
  const vs=ks.map(k=>Math.round(V[k]||0)),mx=Math.max(...vs,1);
- if(!vs.some(v=>v>0))return `<div class="card"><h3>🏋️ حجم التمرين الأسبوعي</h3><p class="nt">علّم مجموعاتك ✓ مع الوزن والعدات لتشوف الحجم الأسبوعي.</p></div>`;
+ if(!vs.some(v=>v>0))return `<div class="card"><h3>${I('dumbbell','g')}حجم التمرين الأسبوعي</h3><p class="nt">علّم مجموعاتك بعلامة الصح مع الوزن والعدات لتشوف الحجم الأسبوعي.</p></div>`;
  const n=ks.length,st=330/n,bw=Math.min(34,st-8);let g=`<svg class="ch" viewBox="0 0 330 150">`;
  ks.forEach((k,i)=>{const x=(LANG=='en'?i:n-1-i)*st+(st-bw)/2,h=vs[i]/mx*105,y=125-h;g+=`<rect x="${x}" y="${y}" width="${bw}" height="${h}" rx="4" fill="${k==wk?'var(--ac)':'var(--ln)'}"/><text x="${x+bw/2}" y="${y-4}" text-anchor="middle" font-size="10" font-weight="700" fill="var(--tx)">${vs[i]>=1000?(vs[i]/1000).toFixed(1)+'k':(vs[i]||'')}</text><text x="${x+bw/2}" y="142" text-anchor="middle" font-size="10" fill="var(--mu)">أ${k}</text>`});
- return `<div class="card"><h3>🏋️ حجم التمرين الأسبوعي</h3>${g}</svg><p class="nt" style="margin-top:0">الحجم = الوزن × العدات لكل المجموعات اللي علّمتها ✓ (كغ).</p></div>`;
+ return `<div class="card"><h3>${I('dumbbell','g')}حجم التمرين الأسبوعي</h3>${g}</svg><p class="nt" style="margin-top:0">الحجم = الوزن × العدات لكل المجموعات اللي علّمتها (كغ).</p></div>`;
 }
 function RHM(){
  const t=new Date(today()+'T12:00'),dow=(t.getDay()+1)%7,st=new Date(t);st.setDate(t.getDate()-dow-28);
  const TL=S.tl||{},DU=S.dur||{};let hd='',h='',cnt=0;
  for(let c=0;c<7;c++){const d=new Date(st);d.setDate(st.getDate()+c);hd+=`<small>${d.toLocaleDateString(LG(),{weekday:'narrow'})}</small>`}
  for(let i=0;i<35;i++){const d=new Date(st);d.setDate(st.getDate()+i);const k=iso(d),fut=d>t,n=TL[k]||0,act=n>0||DU[k]>0;if(!fut&&act)cnt++;h+=`<i class="hm l${fut?-1:n>=15?4:n>=9?3:n>=4?2:act?1:0}">${d.getDate()}</i>`}
- return `<div class="card"><h3>📅 تقويم التمارين</h3><div class="hmg">${hd}${h}</div><p class="nt" style="margin-bottom:0">${cnt?`تمرنت ${cnt} يوم بآخر 5 أسابيع. `:''}كل مربع يوم، وكل ما كان أغمق كل ما كانت المجموعات أكتر. بيتسجل من هلأ ورايح.</p></div>`;
+ return `<div class="card"><h3>${I('cal','g')}تقويم التمارين</h3><div class="hmg">${hd}${h}</div><p class="nt" style="margin-bottom:0">${cnt?`تمرنت ${cnt} يوم بآخر 5 أسابيع. `:''}كل مربع يوم، وكل ما كان أغمق كل ما كانت المجموعات أكتر. بيتسجل من هلأ ورايح.</p></div>`;
 }
 function RPR(){
  const M={};S.days.forEach(d=>d.e.forEach(x=>{const a=dsets(x);if(!a.length)return;const bw=Math.max(...a.map(z=>z.w)),be=Math.max(...a.map(z=>e1(z.w,z.q))),tp=a.filter(z=>z.w==bw).sort((p,q)=>q.q-p.q)[0],m=M[x.n];if(!m||be>m.be)M[x.n]={bw,q:tp.q,be}}));
  const L=Object.entries(M).sort((a,b)=>b[1].be-a[1].be);
- return `<div class="card"><h3>🏆 أرقامك القياسية</h3>${L.length?`<div class="qb" style="margin-top:10px">${L.map(([n,m])=>`<div class="sr"><span><b>${esc(n)}</b><small>${m.bw} كغ × ${m.q||'?'} عدة</small></span><span style="flex:none;color:var(--mu);font-size:12px">1RM≈${Math.round(m.be)}</span></div>`).join('')}</div>`:`<p class="nt">علّم مجموعاتك ✓ لتظهر أرقامك هون.</p>`}</div>`;
+ return `<div class="card"><h3>${I('trophy','g')}أرقامك القياسية</h3>${L.length?`<div class="qb" style="margin-top:10px">${L.map(([n,m])=>`<div class="sr"><span><b>${esc(n)}</b><small>${m.bw} كغ × ${m.q||'?'} عدة</small></span><span style="flex:none;color:var(--mu);font-size:12px">1RM≈${Math.round(m.be)}</span></div>`).join('')}</div>`:`<p class="nt">علّم مجموعاتك بعلامة الصح لتظهر أرقامك هون.</p>`}</div>`;
 }
 function RC(){
  const ds=[];for(let i=6;i>=0;i--){const d=new Date(date+'T12:00');d.setDate(d.getDate()-i);ds.push(iso(d))}
@@ -1472,7 +1487,7 @@ function bm(t){const e=$('#bs');if(e)e.textContent=t}
 function dn_(){S.bk=Date.now();save()}
 async function shW(){
  const f=new File([bj()],'workout-backup-'+today()+'.txt',{type:'text/plain'});
- if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:'نسخة احتياطية - برنامجي التدريبي'});dn_();bm('✅ تمت المشاركة');return}catch(e){if(e&&e.name=='AbortError')return}}
+ if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:'نسخة احتياطية - برنامجي التدريبي'});dn_();bm('تمت المشاركة');return}catch(e){if(e&&e.name=='AbortError')return}}
  ex();
 }
 function ex(){
@@ -1480,7 +1495,7 @@ function ex(){
  catch(e){bm('التحميل مش مدعوم هون. افتح الموقع من كروم أو سفاري مباشرة.')}
 }
 function wipe(){if(confirm('بدك تمسح كل البيانات؟ ما بتقدر ترجعها إلا من نسخة احتياطية.')&&confirm('متأكد؟')){uw();S=def();save();R()}}
-function ld(t){try{const d=JSON.parse(String(t).trim().replace(/[“”„]/g,'"'));if(d.days&&d.meals){mig(d);uw();S=d;save();R();alert('تم استرجاع البيانات ✅')}else alert('النسخة مش صحيحة')}catch(e){alert('النسخة مش صحيحة')}}
+function ld(t){try{const d=JSON.parse(String(t).trim().replace(/[“”„]/g,'"'));if(d.days&&d.meals){mig(d);uw();S=d;save();R();alert('تم استرجاع البيانات')}else alert('النسخة مش صحيحة')}catch(e){alert('النسخة مش صحيحة')}}
 function im(f){if(!f)return;const r=new FileReader();r.onload=()=>ld(r.result);r.readAsText(f)}
 setLang(LANG);R();
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();if('serviceWorker' in navigator&&location.protocol=='https:')navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}
